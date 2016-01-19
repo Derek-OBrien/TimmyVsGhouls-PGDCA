@@ -45,9 +45,43 @@ bool MainMenu::init()
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
 		origin.y + closeItem->getContentSize().height / 2));
 
+
+	// create and set position for Start Game button
+	auto startItem = MenuItemImage::create(
+		"PlayNormal.png",
+		"PlaySelected.png",
+		CC_CALLBACK_1(MainMenu::GoToGameScene, this));
+
+	startItem->setScale(2, 2);
+	startItem->setPosition(Vec2(
+		origin.x + visibleSize.width / 4,		//X Position
+		origin.y + visibleSize.height / 2));	//Y Position
+
+	// create and set position for Settings
+	auto settingsItem = MenuItemImage::create(
+		"SettingsNormal.png",
+		"SettingsSelected.png",
+		CC_CALLBACK_1(MainMenu::GoToSettingsScene, this));
+
+	settingsItem->setScale(2, 2);
+	settingsItem->setPosition(Vec2(
+		origin.x + visibleSize.width / 2,		//X Position
+		origin.y + visibleSize.height / 2));	//Y Position
+
+
+	
+	
 	// create menu, it's an autorelease object
 	auto menu = Menu::create(closeItem, NULL);
 	menu->setPosition(Vec2::ZERO);
+
+
+
+	// add items to the menu
+	menu->addChild(startItem);
+	menu->addChild(settingsItem);
+
+
 	this->addChild(menu, 1);
 
 	/////////////////////////////
@@ -56,7 +90,7 @@ bool MainMenu::init()
 	// add a label shows "Hello World"
 	// create and initialize a label
 
-	auto label = Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 24);
+	auto label = Label::createWithTTF("Menu", "fonts/Marker Felt.ttf", 24);
 
 	// position the label on the center of the screen
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
@@ -66,26 +100,41 @@ bool MainMenu::init()
 	this->addChild(label, 1);
 
 	// add "HelloWorld" splash screen"
-	auto sprite = Sprite::create("HelloWorld.png");
+	//auto sprite = Sprite::create("HelloWorld.png");
 
 	// position the sprite on the center of the screen
-	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	//sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 
 	// add the sprite as a child to this layer
-	this->addChild(sprite, 0);
+	//this->addChild(sprite, 0);
 
+	
+	
+	
 	return true;
 }
 
 
 void MainMenu::menuCloseCallback(Ref* pSender)
 {
-	//Director::getInstance()->end();
-
-	auto scene = GameScene::createScene();
-	Director::getInstance()->runWithScene(scene);
+	Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	exit(0);
 #endif
 }
+
+//Call Game Scene When Start Item Selected
+void MainMenu::GoToGameScene(Ref* pSender){
+	//call next scene to load
+	auto scene = GameScene::createScene();
+	Director::getInstance()->replaceScene(TransitionFade::create(0.1, scene));
+}
+
+//Call Settings Scene When Settings Item Selected
+void MainMenu::GoToSettingsScene(Ref* pSender){
+	//call next scene to load
+	//auto scene = SettingsScene::createScene();
+	//Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
+}
+

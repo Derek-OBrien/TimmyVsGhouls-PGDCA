@@ -80,6 +80,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     director->runWithScene(scene);
 
+
+	//Set file path	
+	CCFileUtils *fileUtils = CCFileUtils::sharedFileUtils();
+	std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+	searchPaths.push_back("menu_images");
+	fileUtils->setSearchPaths(searchPaths);
+
     return true;
 }
 
