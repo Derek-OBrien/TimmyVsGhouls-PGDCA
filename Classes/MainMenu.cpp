@@ -52,7 +52,7 @@ bool MainMenu::init()
 		"PlaySelected.png",
 		CC_CALLBACK_1(MainMenu::GoToGameScene, this));
 
-	startItem->setScale(2, 2);
+	startItem->setScale(4, 4);
 	startItem->setPosition(Vec2(
 		origin.x + visibleSize.width / 4,		//X Position
 		origin.y + visibleSize.height / 2));	//Y Position
@@ -63,7 +63,7 @@ bool MainMenu::init()
 		"SettingsSelected.png",
 		CC_CALLBACK_1(MainMenu::GoToSettingsScene, this));
 
-	settingsItem->setScale(2, 2);
+	settingsItem->setScale(4, 4);
 	settingsItem->setPosition(Vec2(
 		origin.x + visibleSize.width / 2,		//X Position
 		origin.y + visibleSize.height / 2));	//Y Position
@@ -99,14 +99,12 @@ bool MainMenu::init()
 	// add the label as a child to this layer
 	this->addChild(label, 1);
 
-	// add "HelloWorld" splash screen"
-	//auto sprite = Sprite::create("HelloWorld.png");
 
-	// position the sprite on the center of the screen
-	//sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 
-	// add the sprite as a child to this layer
-	//this->addChild(sprite, 0);
+
+	auto bg = Sprite::create("bg.png");
+	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	this->addChild(bg, 0);
 
 	
 	
