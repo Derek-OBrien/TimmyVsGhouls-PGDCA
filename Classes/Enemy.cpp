@@ -4,48 +4,59 @@
 
 
 Enemy::Enemy(){
-	visibleSize = Director::getInstance()->getVisibleSize();
-	origin = Director::getInstance()->getVisibleOrigin();
+
+	m_ypos = NULL;
 }
 
 
 void Enemy::spawnEnemy(int health, float speed, Layer* layer, int lane){
 
-	auto enemySp = Sprite::create("enemy-hd-large.png");
 
-	int yPos;
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	auto enemySp = Sprite::create("enemy.png");
+
+	enemyBody = PhysicsBody::createBox(Size(enemySp->getContentSize().width / 2, enemySp->getContentSize().height), PhysicsMaterial(0, 0.1, 0));
+	enemyBody->setDynamic(true);
+	enemyBody->setGravityEnable(true);
+	enemyBody->setCollisionBitmask(0x03);
+	enemyBody->setContactTestBitmask(true);
+	enemyBody->setRotationEnable(false);
+	enemySp->setPhysicsBody(enemyBody);
 
 	switch (lane)
 	{
+	case 0:
+		m_ypos = origin.y;
+		break;
 	case 1:
-		yPos = 450;
+		m_ypos = origin.y + visibleSize.height / 8;
 		break;
 	case 2:
-		yPos = 150;
+		m_ypos = origin.y + visibleSize.height / 4;
 		break;
 	case 3:
-		yPos = 250;
+		m_ypos = (origin.y + visibleSize.height / 2) - visibleSize.height / 8;
 		break;
 	case 4:
-		yPos = 350;
+		m_ypos = (origin.y + visibleSize.height / 2);
 		break;
 	case 5:
-		yPos = 450;
+		m_ypos = (origin.y + visibleSize.height / 2) + visibleSize.height / 8;
 		break;
 	case 6:
-		yPos = 530;
+		m_ypos = (origin.y + visibleSize.height / 2) + visibleSize.height / 4;
 		break;
 	case 7:
-		yPos = 630;
-		break;
-	case 8:
-		yPos = 730;
+		m_ypos = (origin.y + visibleSize.height) - visibleSize.height / 8;
 		break;
 	default:
 		break;
 	}
 
-	enemySp->setPosition(Point(visibleSize.width, yPos));
+	enemySp->setAnchorPoint(Vec2(0, 0));
+	enemySp->setPosition(Point(visibleSize.width, m_ypos));
 
 	auto enemyMoveAction = MoveBy::create(speed, Point(-visibleSize.width - 200, 0));
 	enemySp->runAction(enemyMoveAction);

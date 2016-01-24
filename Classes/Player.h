@@ -23,7 +23,7 @@ public:
 	Player();
 
 
-	void create(Vec2 spawnPos, Layer* layer);
+	void create(Layer* layer);
 	void update();
 
 	void fireProjectile();
@@ -39,6 +39,8 @@ protected:
 
 	int m_currState;
 	
+	PhysicsBody* playerBody; // physics body of the player
+
 	Sprite* m_playerSprite;
 	Projectile* m_projectile;
 

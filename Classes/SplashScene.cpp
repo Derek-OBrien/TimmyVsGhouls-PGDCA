@@ -37,14 +37,9 @@ bool SpalshScene::init()
     // 2. add a menu item with "X" image, which is clicked to quit the program
     //    you may modify it.
 
-    // add a "close" icon to exit the progress. it's an autorelease object
-	// add "HelloWorld" splash screen"
-	auto bg = Sprite::create("bg.png");
-
-	// position the sprite on the center of the screen
-	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-
-	// add the sprite as a child to this layer
+	//Add Background
+	auto bg = Sprite::create("bg2.png");
+	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, 0);
 
 	//Set Time to display

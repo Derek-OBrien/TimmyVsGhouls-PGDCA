@@ -1,10 +1,10 @@
 #include "AppDelegate.h"
 #include "SplashScene.h"
-
+#include "GameScene.h"
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
+static cocos2d::Size designResolutionSize = cocos2d::Size(2048, 1536);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(512, 384);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
@@ -41,7 +41,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		glview = GLViewImpl::createWithRect("pgdCa", Rect(0, 0, mediumResolutionSize.width, mediumResolutionSize.height));
+		glview = GLViewImpl::createWithRect("pgdCa", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
         glview = GLViewImpl::create("pgdCa");
 #endif
@@ -55,37 +55,47 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // Set the design resolution
-	glview->setDesignResolutionSize(mediumResolutionSize.width, mediumResolutionSize.height, ResolutionPolicy::NO_BORDER);
+	glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::EXACT_FIT);
 
-	
+
+	std::vector<std::string> searchPaths;
+
     Size frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height)
     {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
+		//Set file path	
+		searchPaths.push_back("high");
+		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height, largeResolutionSize.width / designResolutionSize.width));
+
+		FileUtils::getInstance()->setSearchPaths(searchPaths);
+	}
     // if the frame's height is larger than the height of small size.
     else if (frameSize.height > smallResolutionSize.height)
     {        
+		//Set file path	
+		searchPaths.push_back("med");
         director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
+
+		FileUtils::getInstance()->setSearchPaths(searchPaths);
+	}
     // if the frame's height is smaller than the height of medium size.
     else
     {        
+		//Set file path	
+		searchPaths.push_back("low");
         director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
-    }
+
+		FileUtils::getInstance()->setSearchPaths(searchPaths);
+	}
 
     register_all_packages();
 
+//	FileUtils::getInstance()->setSearchPaths(searchPaths);
     // create a scene. it's an autorelease object
-	auto scene = SpalshScene::createScene();
+	auto scene = GameScene::createScene();
     director->runWithScene(scene);
 
-
-	//Set file path	
-	std::vector<std::string> searchPaths = CCFileUtils::getInstance()->getSearchPaths();
-	searchPaths.push_back("menu_images");
-	CCFileUtils::getInstance()->setSearchPaths(searchPaths);
 
     return true;
 }

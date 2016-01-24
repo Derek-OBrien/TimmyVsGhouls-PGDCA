@@ -38,8 +38,8 @@ bool MainMenu::init()
 
 	// add a "close" icon to exit the progress. it's an autorelease object
 	auto closeItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
+		"menu_images/CloseNormal.png",
+		"menu_images/CloseSelected.png",
 		CC_CALLBACK_1(MainMenu::menuCloseCallback, this));
 
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
@@ -48,8 +48,8 @@ bool MainMenu::init()
 
 	// create and set position for Start Game button
 	auto startItem = MenuItemImage::create(
-		"PlayNormal.png",
-		"PlaySelected.png",
+		"menu_images/PlayNormal.png",
+		"menu_images/PlaySelected.png",
 		CC_CALLBACK_1(MainMenu::GoToGameScene, this));
 
 	startItem->setScale(4, 4);
@@ -59,8 +59,8 @@ bool MainMenu::init()
 
 	// create and set position for Settings
 	auto settingsItem = MenuItemImage::create(
-		"SettingsNormal.png",
-		"SettingsSelected.png",
+		"menu_images/SettingsNormal.png",
+		"menu_images/SettingsSelected.png",
 		CC_CALLBACK_1(MainMenu::GoToSettingsScene, this));
 
 	settingsItem->setScale(4, 4);
@@ -102,8 +102,9 @@ bool MainMenu::init()
 
 
 
-	auto bg = Sprite::create("bg.png");
-	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	//Add Background
+	auto bg = Sprite::create("bg2.png");
+	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, 0);
 
 	

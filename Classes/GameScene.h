@@ -10,6 +10,7 @@
 #include "Ladder.h"
 #include "Enemy.h"
 #include "WaveFactory.h"
+#include "LaneEdges.h"
 
 USING_NS_CC;
 
@@ -46,7 +47,7 @@ private:
 	Player* m_player;
 	Enemy* enemy;
 	Ladder* m_ladder;
-	
+	LaneEdge* m_laneEdge;
 	WaveFactory* m_wf;
 
 	bool isTouchDown;

@@ -18,4 +18,5 @@ private:
 
 	Enemy* enemy;
 	float speed;
+	int lane;
 };

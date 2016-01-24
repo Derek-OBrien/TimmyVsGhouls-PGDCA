@@ -23,13 +23,12 @@ public:
 
 
 private:
-	// Size & Origin or screen
-	Size visibleSize;
-	Vec2 origin;
+	PhysicsBody* enemyBody; // physics body of the player
 
 	Sprite* enemySprite;
 	int m_health;
 	float m_speed;
+	int m_ypos;
 
 
 };

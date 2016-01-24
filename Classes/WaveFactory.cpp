@@ -4,14 +4,14 @@
 USING_NS_CC;
 
 WaveFactory::WaveFactory(){
-
+	lane = 1;
 }
 
 void WaveFactory::createWave(Layer* layer){
 
-	int lane = CCRANDOM_0_1() * 8;
+	lane = CCRANDOM_0_1() * 8;
 
 	enemy = new Enemy();
 
-	enemy->spawnEnemy(100, 2, layer, lane);
+	enemy->spawnEnemy(100, 5, layer, lane);
 }

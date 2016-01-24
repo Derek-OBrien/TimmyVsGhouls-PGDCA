@@ -13,7 +13,7 @@ Scene* GameScene::createScene()
     auto scene = Scene::createWithPhysics();
 
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->getPhysicsWorld()->setGravity(Vect(0.0f, -25));
+	scene->getPhysicsWorld()->setGravity(Vect(0.0f, 18.8f));
 
 
     auto layer = GameScene::create();
@@ -32,51 +32,37 @@ bool GameScene::init()
 
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Size windowSize = Director::getInstance()->getWinSize();
 
-	//Add Collision to Bottom Edge Only 
-	auto bottomEdgeBody = PhysicsBody::createEdgeSegment(
-		Vec2(origin.x - (visibleSize.width / 2), origin.y - (visibleSize.height / 2) + 100),	//Point a Bottom left corner
-		Vec2(origin.x + (visibleSize.width / 2), origin.y - (visibleSize.height / 2) + 100),	//Point b Bottom right corner
-		PHYSICSBODY_MATERIAL_DEFAULT,					//Material
-		2);											//Border
-
-	//Set up edgebody settings
-	bottomEdgeBody->setCollisionBitmask(0x02);		//Set Collision Bitmask
-	bottomEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
-	bottomEdgeBody->setMass(PHYSICS_INFINITY);
-
-	auto bottomEdgeNode = Node::create();	//Node for bottom edge collision
-	bottomEdgeNode->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	bottomEdgeNode->setPhysicsBody(bottomEdgeBody);
-	this->addChild(bottomEdgeNode, 6);
+	//Add lane physics edges
+	m_laneEdge = new LaneEdge();
+	m_laneEdge->create(this);
 
 	//Add Background
 	auto bg = Sprite::create("bg2.png");
-	bg->setScale(visibleSize.width / bg->getContentSize().width, visibleSize.height / bg->getContentSize().height);
-	bg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
+	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
     this->addChild(bg, 0);
 
 	auto fg = Sprite::create("fg.png");
-	fg->setScale(visibleSize.width / bg->getContentSize().width, visibleSize.height / bg->getContentSize().height);
-	fg->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
+	fg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(fg, 5);
 
 
 
 	//Add Ladders
 	m_ladder = new Ladder();
-	m_ladder->create(Vec2(origin.x + 100, origin.y), this);
-	m_ladder->create(Vec2(origin.x, origin.y + 100), this);
-	m_ladder->create(Vec2(origin.x + 100, origin.y + 190), this);
-	m_ladder->create(Vec2(origin.x, origin.y + 280), this);
-	m_ladder->create(Vec2(origin.x + 100, origin.y + 390), this);
-	m_ladder->create(Vec2(origin.x, origin.y + 480), this);
-	m_ladder->create(Vec2(origin.x + 100, origin.y + 580), this);
+	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y), this); //ok
+	m_ladder->create(Vec2(origin.x, origin.y + visibleSize.height / 8), this); //ok
+	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 4), this); //ok
+	m_ladder->create(Vec2(origin.x, (origin.y + visibleSize.height / 2 ) - visibleSize.height / 8), this); // ok
+	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 2), this); //ok
+	m_ladder->create(Vec2(origin.x, (origin.y + visibleSize.height / 2) + visibleSize.height / 8), this);
+	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, (origin.y + visibleSize.height / 2) + visibleSize.height / 4), this);
+	
 
 	//Add Player
 	m_player = new Player();
-	//m_player->create(Vec2(origin.x + 100, origin.y + 280), this);
-	m_player->create(Vec2(origin.x, origin.y),this);
+	m_player->create(this);
 
 	//enemy = new Enemy();
 	
@@ -107,13 +93,12 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
-	//this->schedule(schedule_selector(GameScene::createWaves), 0.5);
+	this->schedule(schedule_selector(GameScene::createWaves), 0.5);
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	if (true == isTouchDown)
-	{
+	if (true == isTouchDown){
 		if (initialTouchPos[0] - currentTouchPos[0] > visibleSize.width * 0.05)
 		{
 			CCLOG("SWIPED LEFT");
@@ -140,6 +125,9 @@ void GameScene::update(float dt){
 			isTouchDown = false;
 		}
 	}
+	//else if (isTouchDown == false){
+	//	m_player->setCurrentState(STILL);
+	//}
 
 	m_player->changeAnimation(this, m_player->getCurrentState());
 
@@ -147,7 +135,7 @@ void GameScene::update(float dt){
 
 //Create Waves
 void GameScene::createWaves(float dt) {
-	//m_wf->createWave(this);
+	m_wf->createWave(this);
 }
 
 
