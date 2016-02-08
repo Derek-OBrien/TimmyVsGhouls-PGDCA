@@ -5,15 +5,18 @@ USING_NS_CC;
 Player::Player(){
 
 	m_playerSprite = NULL;
+	//projectile = new Projectile();
 }
 
 //Create Tower on Touch
 void Player::create(Layer* layer){
 
 	m_currState = STILL;
+	m_canFire = true;
 
 	m_playerSprite = Sprite::create("stickman/wl_01.png");
 	
+
 	playerBody = PhysicsBody::createBox(Size(m_playerSprite->getContentSize().width / 2, m_playerSprite->getContentSize().height), PhysicsMaterial(0, 0.1, 0));
 	playerBody->setDynamic(true);
 	playerBody->setGravityEnable(true);
@@ -32,8 +35,13 @@ void Player::update(){
 
 }
 
-void Player::fireProjectile(){
+void Player::fireProjectile(Layer* layer){
+	
+	if (m_canFire == true){
 
+	//projectile->spawnProjectile(m_playerSprite->getPosition(), layer);
+
+	}
 }
 
 
@@ -41,7 +49,6 @@ void Player::changeAnimation(Layer* layer, int state){
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	Size windowSize = Director::getInstance()->getWinSize();
 
 	Vector<SpriteFrame*> animFrames(5);
 	char str[100] = { 0 };
@@ -106,3 +113,8 @@ void Player::changeAnimation(Layer* layer, int state){
 }
 
 
+
+
+Vec2 Player::getCurrentPosition(){ 
+	return m_playerSprite->getPosition(); 
+}

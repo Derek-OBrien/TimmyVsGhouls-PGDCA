@@ -26,7 +26,7 @@ public:
 	void create(Layer* layer);
 	void update();
 
-	void fireProjectile();
+	void fireProjectile(Layer* layer);
 
 	// setter and getter for player state
 	int getCurrentState(){ return m_currState; };
@@ -35,14 +35,20 @@ public:
 	void changeAnimation(Layer* layer, int state);
 	void releaseActions();
 
+	Vec2 getCurrentPosition();
+
+
+	Sprite* m_playerSprite;
+
 protected:
 
 	int m_currState;
+
+	bool m_canFire;
 	
 	PhysicsBody* playerBody; // physics body of the player
 
-	Sprite* m_playerSprite;
-	Projectile* m_projectile;
+	//Projectile* projectile;
 
 	SpriteBatchNode* playerBatch;
 	SpriteFrameCache* cache;

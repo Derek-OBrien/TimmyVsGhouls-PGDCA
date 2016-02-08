@@ -2,6 +2,7 @@
 
 #include "GameScene.h"
 
+#include "LevelSelScene.h"
 USING_NS_CC;
 
 Scene* MainMenu::createScene()
@@ -126,7 +127,7 @@ void MainMenu::menuCloseCallback(Ref* pSender)
 //Call Game Scene When Start Item Selected
 void MainMenu::GoToGameScene(Ref* pSender){
 	//call next scene to load
-	auto scene = GameScene::createScene();
+	auto scene = LevelSel::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(0.1, scene));
 }
 

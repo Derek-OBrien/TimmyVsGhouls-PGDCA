@@ -13,7 +13,7 @@ Scene* GameScene::createScene()
     auto scene = Scene::createWithPhysics();
 
 	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->getPhysicsWorld()->setGravity(Vect(0.0f, 18.8f));
+	scene->getPhysicsWorld()->setGravity(Vect(0.0f, -18.8f));
 
 
     auto layer = GameScene::create();
@@ -32,7 +32,6 @@ bool GameScene::init()
 
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	Size windowSize = Director::getInstance()->getWinSize();
 
 	//Add lane physics edges
 	m_laneEdge = new LaneEdge();
@@ -48,26 +47,14 @@ bool GameScene::init()
 	this->addChild(fg, 5);
 
 
-
-	//Add Ladders
-	m_ladder = new Ladder();
-	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y), this); //ok
-	m_ladder->create(Vec2(origin.x, origin.y + visibleSize.height / 8), this); //ok
-	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 4), this); //ok
-	m_ladder->create(Vec2(origin.x, (origin.y + visibleSize.height / 2 ) - visibleSize.height / 8), this); // ok
-	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, origin.y + visibleSize.height / 2), this); //ok
-	m_ladder->create(Vec2(origin.x, (origin.y + visibleSize.height / 2) + visibleSize.height / 8), this);
-	m_ladder->create(Vec2(origin.x + visibleSize.width / 8, (origin.y + visibleSize.height / 2) + visibleSize.height / 4), this);
-	
-
 	//Add Player
 	m_player = new Player();
 	m_player->create(this);
 
-	//enemy = new Enemy();
-	
+	//Enemy Wave
 	m_wf = new WaveFactory();
 
+	projectile = new Projectile();
 
 	//Add Touch Listener
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -84,6 +71,7 @@ bool GameScene::init()
 	initialTouchPos[1] = 0;
 
 
+	loadLevel(0);
 	//To call main Update
 	this->scheduleUpdate();
 
@@ -93,7 +81,7 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
-	this->schedule(schedule_selector(GameScene::createWaves), 0.5);
+	//this->schedule(schedule_selector(GameScene::createWaves), 2);
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -125,12 +113,14 @@ void GameScene::update(float dt){
 			isTouchDown = false;
 		}
 	}
-	//else if (isTouchDown == false){
-	//	m_player->setCurrentState(STILL);
-	//}
 
 	m_player->changeAnimation(this, m_player->getCurrentState());
 
+
+	/*if touch on right half of screen*/
+	if (initialTouchPos[0] > visibleSize.width / 2){
+		m_player->fireProjectile(this);
+	}
 }
 
 //Create Waves
@@ -141,12 +131,14 @@ void GameScene::createWaves(float dt) {
 
 //On Touch
 bool GameScene::onTouchBegan(Touch *touch, Event * event){
+
 	initialTouchPos[0] = touch->getLocation().x;
 	initialTouchPos[1] = touch->getLocation().y;
 	currentTouchPos[0] = touch->getLocation().x;
 	currentTouchPos[1] = touch->getLocation().y;
 
 	isTouchDown = true;
+
 	return true;
 }
 
@@ -164,3 +156,110 @@ void GameScene::onTouchCancelled(Touch *touch, Event *event){
 	onTouchEnded(touch, event);
 }
 
+
+
+void GameScene::loadLevel(int level){
+
+	enemy = new Enemy();
+
+	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename("../../Resources/levels.plist");
+
+	//std::string levelsFile = FileUtils::getInstance()->fullPathForFilename("levels.plist");
+
+
+	ValueMap m_levels = FileUtils::getInstance()->getValueMapFromFile(levelsFile);
+
+	m_currentLevel = level;
+
+	auto& LadderData = m_levels["ladders"].asValueVector();
+	auto& EnemyData = m_levels["enemies"].asValueVector();
+
+	for (auto i = LadderData.begin(); i != LadderData.end(); i++){
+
+		ValueMap& sdata = i->asValueMap();
+		int x = sdata["x"].asInt();
+		int y = sdata["y"].asInt();
+
+		createLadders(x, y);
+	}
+
+	for (auto i = EnemyData.begin(); i != EnemyData.end(); i++){
+
+		ValueMap& sdata = i->asValueMap();
+		int lane = sdata["lane"].asInt();
+		int speed = sdata["speed"].asInt();
+
+		enemy->spawnEnemy(100, speed, this, lane);
+	}
+	
+}
+
+
+void GameScene::resetLevel(void){}
+void GameScene::levelCompleted(void){}
+
+void GameScene::createLadders(int x, int y){
+	
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	m_ladder = new Ladder();
+
+	int pX;
+
+	switch (x){
+	case 0:
+		pX = origin.x;
+		break;
+	case 1:
+		pX = origin.x + visibleSize.width / 8;
+		break;
+	default:
+		break;
+	}
+
+	m_ladder->create(Vec2(pX, getLane(y)), this);
+
+}
+
+void GameScene::clearLayer(void){}
+
+
+int GameScene::getLane(int x){
+
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	int l;
+
+	switch (x)
+	{
+	case 0:
+		l = origin.y;
+		break;
+	case 1:
+		l = origin.y + visibleSize.height / 8;
+		break;
+	case 2:
+		l = origin.y + visibleSize.height / 4;
+		break;
+	case 3:
+		l = (origin.y + visibleSize.height / 2) - visibleSize.height / 8;
+		break;
+	case 4:
+		l = (origin.y + visibleSize.height / 2);
+		break;
+	case 5:
+		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 8;
+		break;
+	case 6:
+		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 4;
+		break;
+	case 7:
+		l = (origin.y + visibleSize.height) - visibleSize.height / 8;
+		break;
+	default:
+		break;
+	}
+
+	return l;
+}

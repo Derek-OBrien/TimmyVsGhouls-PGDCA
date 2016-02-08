@@ -3,7 +3,9 @@
 #include "GameScene.h"
 USING_NS_CC;
 
+//Set at highest Res
 static cocos2d::Size designResolutionSize = cocos2d::Size(2048, 1536);
+
 static cocos2d::Size smallResolutionSize = cocos2d::Size(512, 384);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
@@ -41,7 +43,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		glview = GLViewImpl::createWithRect("pgdCa", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+		glview = GLViewImpl::createWithRect("pgdCa", Rect(0, 0, mediumResolutionSize.width, mediumResolutionSize.height));
 #else
         glview = GLViewImpl::create("pgdCa");
 #endif
@@ -65,6 +67,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if (frameSize.height > mediumResolutionSize.height)
     {        
 		//Set file path	
+		//Android uses this resoultion
 		searchPaths.push_back("high");
 		director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height, largeResolutionSize.width / designResolutionSize.width));
 
@@ -74,6 +77,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     else if (frameSize.height > smallResolutionSize.height)
     {        
 		//Set file path	
+		//Windows Phone uses this resoultion
 		searchPaths.push_back("med");
         director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
 
@@ -91,9 +95,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
-//	FileUtils::getInstance()->setSearchPaths(searchPaths);
+
     // create a scene. it's an autorelease object
-	auto scene = GameScene::createScene();
+	auto scene = SpalshScene::createScene();
     director->runWithScene(scene);
 
 

@@ -11,6 +11,10 @@
 #include "Enemy.h"
 #include "WaveFactory.h"
 #include "LaneEdges.h"
+#include "Projectile.h"
+
+
+#include <vector>
 
 USING_NS_CC;
 
@@ -38,7 +42,9 @@ public:
     CREATE_FUNC(GameScene);
 
 
+	void loadLevel(int level);
 private:
+
 	//Set physics world
 	void SetPhysicsWorld(PhysicsWorld *world) { sceneWorld = world; };
 	PhysicsWorld *sceneWorld;
@@ -49,11 +55,28 @@ private:
 	Ladder* m_ladder;
 	LaneEdge* m_laneEdge;
 	WaveFactory* m_wf;
+	Projectile* projectile;
+
+	ValueMap* m_enemiesPool;
+	//ValueMap m_levels;
+
+	Vector<Ladder*> m_ladderPool;
+
+	int m_currentLevel;
+	int m_ladderPoolIndex;
 
 	bool isTouchDown;
 
 	float initialTouchPos[2];
 	float currentTouchPos[2];
+
+
+	void resetLevel(void);
+	void levelCompleted(void);
+	void createLadders(int x, int y);
+	void clearLayer(void);
+
+	int getLane(int x);
 };
 
 

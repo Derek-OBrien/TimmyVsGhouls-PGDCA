@@ -63,6 +63,10 @@ void Enemy::spawnEnemy(int health, float speed, Layer* layer, int lane){
 
 	//Add to layer
 	layer->addChild(enemySp, 3);
+
+	if (enemySp->getPositionX() < -100){
+		layer->removeChild(enemySp, true);
+	}
 }
 
 
