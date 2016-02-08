@@ -11,12 +11,13 @@ class WaveFactory : public Layer
 public:
 	WaveFactory();
 	
-	void createWave(Layer* layer);
+	void createWave(int amount, int mil, int mxl, int speed, Layer* layer);
 
 	CREATE_FUNC(WaveFactory);
 private:
 
 	Enemy* enemy;
 	float speed;
-	int lane;
+	int minLane;
+	int maxLane;
 };

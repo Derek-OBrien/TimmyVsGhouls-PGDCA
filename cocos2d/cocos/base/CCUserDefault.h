@@ -250,6 +250,7 @@ public:
      */
     static bool isXMLFileExist();
 
+	void reset();
 protected:
     UserDefault();
     virtual ~UserDefault();

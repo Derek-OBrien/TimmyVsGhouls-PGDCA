@@ -9,7 +9,7 @@ Player::Player(){
 }
 
 //Create Tower on Touch
-void Player::create(Layer* layer){
+void Player::create(Vec2(pos), Layer* layer){
 
 	m_currState = STILL;
 	m_canFire = true;
@@ -27,7 +27,7 @@ void Player::create(Layer* layer){
 
 
 	m_playerSprite->setAnchorPoint(Vec2(0, 0));
-	m_playerSprite->setPosition(Vec2(0, 0));
+	m_playerSprite->setPosition(pos);
 	layer->addChild(m_playerSprite, 2);
 }
 

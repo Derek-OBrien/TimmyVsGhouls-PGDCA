@@ -21,7 +21,7 @@ USING_NS_CC;
 class GameScene : public Layer
 {
 public:
-    static Scene* createScene();
+	static Scene* createScene();
 
     virtual bool init();
 
@@ -36,12 +36,14 @@ public:
 
 	void update(float dt);
 	//Spawn Game objects
-	void createWaves(float dt);
+	void createWaves(float dt, int min, int max, float speed, int num);
+	void spawnWaves(float dt);
+
 
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
 
-
+	void setLevel(int level){ m_currentLevel = level; }
 	void loadLevel(int level);
 private:
 
@@ -57,7 +59,7 @@ private:
 	WaveFactory* m_wf;
 	Projectile* projectile;
 
-	ValueMap* m_enemiesPool;
+	Vector<Enemy*> m_enemiesPool;
 	//ValueMap m_levels;
 
 	Vector<Ladder*> m_ladderPool;

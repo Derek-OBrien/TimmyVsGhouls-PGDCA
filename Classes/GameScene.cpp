@@ -49,10 +49,9 @@ bool GameScene::init()
 
 	//Add Player
 	m_player = new Player();
-	m_player->create(this);
-
+	
 	//Enemy Wave
-	m_wf = new WaveFactory();
+	//m_wf = new WaveFactory();
 
 	projectile = new Projectile();
 
@@ -81,7 +80,7 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
-	//this->schedule(schedule_selector(GameScene::createWaves), 2);
+	//this->schedule(schedule_selector(GameScene::spawnWaves), 2);
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -123,12 +122,6 @@ void GameScene::update(float dt){
 	}
 }
 
-//Create Waves
-void GameScene::createWaves(float dt) {
-	m_wf->createWave(this);
-}
-
-
 //On Touch
 bool GameScene::onTouchBegan(Touch *touch, Event * event){
 
@@ -160,43 +153,104 @@ void GameScene::onTouchCancelled(Touch *touch, Event *event){
 
 void GameScene::loadLevel(int level){
 
-	enemy = new Enemy();
+	//m_currentLevel = level;
 
-	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename("../../Resources/levels.plist");
+	UserDefault* ud = UserDefault::getInstance();
+	m_currentLevel = ud->getIntegerForKey("level");
+	//ud->deleteValueForKey("level");
+	char file[200] = { 0 };
 
-	//std::string levelsFile = FileUtils::getInstance()->fullPathForFilename("levels.plist");
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+	sprintf(file, "../../Resources/level%d.plist", m_currentLevel);
+	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename(file);
+#endif
+	
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	sprintf(file, "level%d.plist", m_currentLevel);
+	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename(file);
+#endif
 
 
 	ValueMap m_levels = FileUtils::getInstance()->getValueMapFromFile(levelsFile);
 
-	m_currentLevel = level;
-
 	auto& LadderData = m_levels["ladders"].asValueVector();
 	auto& EnemyData = m_levels["enemies"].asValueVector();
+	auto& PlayerData = m_levels["player"].asValueVector();
+	auto& MetaData = m_levels["meta"].asValueVector();
+	auto& TestData = m_levels["test"].asValueVector();
 
+	/*
+		Gat MetaData data from file
+	*/
+	for (auto i = MetaData.begin(); i != MetaData.end(); i++){
+		ValueMap& sdata = i->asValueMap();
+
+	}
+	/*
+		Get player data from file
+	*/
+	for (auto i = PlayerData.begin(); i != PlayerData.end(); i++){
+		ValueMap& sdata = i->asValueMap();
+		m_player->create(Vec2(sdata["posX"].asInt(), getLane(sdata["posY"].asInt())), this);
+	}
+
+	/*
+		Get Ladder data from file
+	*/
 	for (auto i = LadderData.begin(); i != LadderData.end(); i++){
-
 		ValueMap& sdata = i->asValueMap();
-		int x = sdata["x"].asInt();
-		int y = sdata["y"].asInt();
-
-		createLadders(x, y);
+		createLadders(sdata["x"].asInt(), sdata["y"].asInt());
 	}
 
+	/*
+		Gat enemy data from file
+	*/
 	for (auto i = EnemyData.begin(); i != EnemyData.end(); i++){
-
 		ValueMap& sdata = i->asValueMap();
-		int lane = sdata["lane"].asInt();
-		int speed = sdata["speed"].asInt();
-
-		enemy->spawnEnemy(100, speed, this, lane);
+		enemy = new Enemy();
+		enemy->spawnEnemy(100, sdata["speed"].asInt(), this, sdata["lane"].asInt());
 	}
-	
+
+	for (auto i = TestData.begin(); i != TestData.end(); i++){
+		ValueMap& sdata = i->asValueMap();
+		
+		int amount = sdata["amount"].asInt();
+		int minLane = sdata["minlane"].asInt();
+		int maxLane = sdata["maxlane"].asInt();
+		int speed = sdata["speed"].asInt();
+		float spawnRate = sdata["spawnrate"].asFloat();
+		
+
+		//createWaves(spawnRate, minLane, maxLane, speed, amount);
+		//enemy->spawnEnemy(100, sdata["speed"].asInt(), this, sdata["lane"].asInt());
+	}
 }
 
+void GameScene::spawnWaves(float dt){
 
-void GameScene::resetLevel(void){}
-void GameScene::levelCompleted(void){}
+	for (int i = 0; i < m_enemiesPool.size(); i++){
+		m_enemiesPool.at(i)->update(dt);
+	}
+}
+
+//Create Waves
+void GameScene::createWaves(float dt, int mil, int mxl, float speed, int num) {
+	//m_wf->createWave(num,min,max,speed, this);
+
+
+	std::random_device rd;     // only used once to initialise (seed) engine
+
+	for (int i = 0; i < num; i++){
+		std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+		std::uniform_int_distribution<int> uni(mil, mxl); // guaranteed unbiased
+		auto randLane = uni(rng);
+
+		enemy = new Enemy();
+
+		m_enemiesPool.pushBack(enemy->spawnEnemy(100, speed, this, getLane(randLane)));
+	}
+}
+
 
 void GameScene::createLadders(int x, int y){
 	
@@ -222,14 +276,11 @@ void GameScene::createLadders(int x, int y){
 
 }
 
-void GameScene::clearLayer(void){}
-
-
 int GameScene::getLane(int x){
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	int l;
+	int l = 0;
 
 	switch (x)
 	{
@@ -263,3 +314,8 @@ int GameScene::getLane(int x){
 
 	return l;
 }
+
+void GameScene::clearLayer(void){}
+void GameScene::resetLevel(void){}
+void GameScene::levelCompleted(void){}
+

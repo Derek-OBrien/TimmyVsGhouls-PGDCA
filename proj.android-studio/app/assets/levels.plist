@@ -33,21 +33,67 @@
 	<array>
 		<dict>
 			<key>x</key>
-			<real>100</real>
+			<real>0.0</real>
 			<key>y</key>
-			<real>600</real>
+			<real>0.0</real>
 		</dict>
 		<dict>
 			<key>x</key>
-			<real>200</real>
+			<real>1</real>
 			<key>y</key>
-			<real>300</real>
+			<real>1</real>
 		</dict>
 		<dict>
 			<key>x</key>
-			<real>50</real>
+			<real>0.0</real>
 			<key>y</key>
-			<real>100</real>
+			<real>2</real>
+		</dict>
+		<dict>
+			<key>x</key>
+			<real>1</real>
+			<key>y</key>
+			<real>3</real>
+		</dict>
+		<dict>
+			<key>x</key>
+			<real>0.0</real>
+			<key>y</key>
+			<real>4</real>
+		</dict>
+		<dict>
+			<key>x</key>
+			<real>1</real>
+			<key>y</key>
+			<real>5</real>
+		</dict>
+		<dict>
+			<key>x</key>
+			<real>0.0</real>
+			<key>y</key>
+			<real>6</real>
+		</dict>
+		<dict>
+			<key>x</key>
+			<real>1</real>
+			<key>y</key>
+			<real>7</real>
+		</dict>
+	</array>
+	<key>meta</key>
+	<array>
+		<dict>
+			<key>spawnrate</key>
+			<real>2</real>
+		</dict>
+	</array>
+	<key>player</key>
+	<array>
+		<dict>
+			<key>posX</key>
+			<real>0.0</real>
+			<key>posY</key>
+			<real>4</real>
 		</dict>
 	</array>
 </dict>

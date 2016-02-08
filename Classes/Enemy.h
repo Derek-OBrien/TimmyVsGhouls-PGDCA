@@ -9,7 +9,7 @@ public:
 
 	Enemy();
 
-	void spawnEnemy(int health, float speed, Layer* layer, int lane );
+	Enemy* spawnEnemy(int health, float speed, Layer* layer, int lane );
 
 	Vec2 getPosition(){ return enemySprite->getPosition(); }
 	void update(float dt);
@@ -21,14 +21,15 @@ public:
 	void setSpeed(float speed){ m_speed = speed; }
 	float getSpeed(){ return m_speed; }
 
-
+	CREATE_FUNC(Enemy);
 private:
 	PhysicsBody* enemyBody; // physics body of the player
 
+	Enemy* enemy;
 	Sprite* enemySprite;
 	int m_health;
 	float m_speed;
-	int m_ypos;
 
+	MoveBy* enemyMoveAction;
 
 };

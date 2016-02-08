@@ -23,7 +23,7 @@ public:
 	Player();
 
 
-	void create(Layer* layer);
+	void create(Vec2(pos),Layer* layer);
 	void update();
 
 	void fireProjectile(Layer* layer);

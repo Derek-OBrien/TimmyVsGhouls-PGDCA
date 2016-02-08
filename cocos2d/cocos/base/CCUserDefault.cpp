@@ -40,6 +40,11 @@ using namespace std;
 
 NS_CC_BEGIN
 
+void UserDefault::reset()
+{
+	string strFilePath = FileUtils::getInstance()->getWritablePath() + XML_FILE_NAME;
+	remove(strFilePath.c_str());
+}
 /**
  * define the functions here because we don't want to
  * export xmlNodePtr and other types in "CCUserDefault.h"
