@@ -39,8 +39,8 @@ bool MainMenu::init()
 
 	// add a "close" icon to exit the progress. it's an autorelease object
 	auto closeItem = MenuItemImage::create(
-		"menu_images/CloseNormal.png",
-		"menu_images/CloseSelected.png",
+		"menu_images/exit.png",
+		"menu_images/exit.png",
 		CC_CALLBACK_1(MainMenu::menuCloseCallback, this));
 
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
@@ -49,11 +49,10 @@ bool MainMenu::init()
 
 	// create and set position for Start Game button
 	auto startItem = MenuItemImage::create(
-		"menu_images/PlayNormal.png",
-		"menu_images/PlaySelected.png",
+		"menu_images/play.png",
+		"menu_images/play.png",
 		CC_CALLBACK_1(MainMenu::GoToGameScene, this));
 
-	startItem->setScale(4, 4);
 	startItem->setPosition(Vec2(
 		origin.x + visibleSize.width / 4,		//X Position
 		origin.y + visibleSize.height / 2));	//Y Position
@@ -64,7 +63,6 @@ bool MainMenu::init()
 		"menu_images/SettingsSelected.png",
 		CC_CALLBACK_1(MainMenu::GoToSettingsScene, this));
 
-	settingsItem->setScale(4, 4);
 	settingsItem->setPosition(Vec2(
 		origin.x + visibleSize.width / 2,		//X Position
 		origin.y + visibleSize.height / 2));	//Y Position
@@ -92,7 +90,7 @@ bool MainMenu::init()
 	// create and initialize a label
 
 	auto label = Label::createWithTTF("Menu", FONT, FONTSIZE);
-
+	label->setColor(FONTCOLOR);
 	// position the label on the center of the screen
 	label->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - label->getContentSize().height));

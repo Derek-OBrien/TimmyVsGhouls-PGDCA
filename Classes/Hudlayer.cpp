@@ -1,6 +1,8 @@
 
 
 #include "HudLayer.h"
+#include "PauseScene.h"
+#include "GameOverScene.h"
 
 Hud::Hud(){
 	Hud::init();
@@ -17,13 +19,13 @@ bool Hud::init(){
 
 	//pause button
 	auto pauseBtn = MenuItemImage::create(
-		"menu_images/PlayNormal.png",
-		"menu_images/PlaySelected.png",
+		"menu_images/pause.png",
+		"menu_images/pause.png",
 		CC_CALLBACK_1(Hud::goToPauseScene, this));
 
 	pauseBtn->setPosition(Vec2(
 		origin.x + visibleSize.width - pauseBtn->getContentSize().width,			//X Position
-		origin.y + visibleSize.height - pauseBtn->getContentSize().height));		//Y Position
+		origin.y + visibleSize.height - pauseBtn->getContentSize().height / 2));		//Y Position
 
 	auto menu = Menu::create(pauseBtn, NULL);
 	menu->setPosition(Vec2::ZERO);
@@ -57,10 +59,16 @@ void Hud::updateAmount(int amt){
 		origin.x + m_amountLabel->getContentSize().width / 2,
 		origin.y + visibleSize.height - m_amountLabel->getContentSize().height));
 
+	if (m_amount > 100){
+
+		auto scene = GameOverScene::createScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
+
+	}
 }
 
 //Go to Pause Scene
 void Hud::goToPauseScene(Ref* pSender){
-	//auto scene = PauseScene::createScene();
-	//Director::getInstance()->pushScene(TransitionFade::create(TRANSITION_TIME, scene));
+	auto scene = PauseScene::createScene();
+	Director::getInstance()->pushScene(TransitionFade::create(TRANSITION_TIME, scene));
 }

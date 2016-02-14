@@ -153,6 +153,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Ladder.cpp" />
     <ClCompile Include="..\Classes\LaneEdges.cpp" />
     <ClCompile Include="..\Classes\LevelSelScene.cpp" />
+    <ClCompile Include="..\Classes\PauseScene.cpp" />
     <ClCompile Include="..\Classes\SplashScene.cpp" />
     <ClCompile Include="..\Classes\MainMenu.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
@@ -171,6 +172,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Ladder.h" />
     <ClInclude Include="..\Classes\LaneEdges.h" />
     <ClInclude Include="..\Classes\LevelSelScene.h" />
+    <ClInclude Include="..\Classes\PauseScene.h" />
     <ClInclude Include="..\Classes\SplashScene.h" />
     <ClInclude Include="..\Classes\MainMenu.h" />
     <ClInclude Include="..\Classes\Projectile.h" />

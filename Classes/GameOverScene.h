@@ -11,7 +11,8 @@ public:
 	virtual bool init();
 
 	void menuCloseCallback(cocos2d::Ref* pSender);
-
+	void restartLevel(Ref* pSender);
+	void gotoStart(Ref* pSender);
 	CREATE_FUNC(GameOverScene);
 };
 
