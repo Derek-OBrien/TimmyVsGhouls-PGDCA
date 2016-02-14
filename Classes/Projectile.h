@@ -7,13 +7,15 @@
 
 USING_NS_CC;
 
-class Projectile{
+class Projectile : public Sprite{
 
 public:
 
 	Projectile();
 
 	void spawnProjectile(Vec2 position, Layer* layer);
+
+	CREATE_FUNC(Projectile);
 
 private:
 	int m_damage;

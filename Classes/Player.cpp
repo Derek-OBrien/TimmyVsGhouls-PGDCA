@@ -1,5 +1,6 @@
 
 #include "Player.h"
+#include "GameDefines.h"
 
 USING_NS_CC;
 Player::Player(){
@@ -20,7 +21,7 @@ void Player::create(Vec2(pos), Layer* layer){
 	playerBody = PhysicsBody::createBox(Size(m_playerSprite->getContentSize().width / 2, m_playerSprite->getContentSize().height), PhysicsMaterial(0, 0.1, 0));
 	playerBody->setDynamic(true);
 	playerBody->setGravityEnable(true);
-	playerBody->setCollisionBitmask(0x01);
+	playerBody->setCollisionBitmask(PLAYER_BITMASK);
 	playerBody->setContactTestBitmask(true);
 	playerBody->setRotationEnable(false);
 	m_playerSprite->setPhysicsBody(playerBody);
@@ -34,16 +35,6 @@ void Player::create(Vec2(pos), Layer* layer){
 void Player::update(){
 
 }
-
-void Player::fireProjectile(Layer* layer){
-	
-	if (m_canFire == true){
-
-	//projectile->spawnProjectile(m_playerSprite->getPosition(), layer);
-
-	}
-}
-
 
 void Player::changeAnimation(Layer* layer, int state){
 

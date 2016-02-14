@@ -13,11 +13,6 @@ public:
 
 private:
 
-
-	// Size & Origin or screen
-	Size visibleSize;
-	Vec2 origin;
-
 	Sprite* m_ladderSprite;
 
 };

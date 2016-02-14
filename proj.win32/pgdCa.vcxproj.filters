@@ -45,8 +45,16 @@
     <ClCompile Include="..\Classes\LaneEdges.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Projectile.cpp" />
-    <ClCompile Include="..\Classes\LevelSelScene.cpp" />
+    <ClCompile Include="Projectile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\LevelSelScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CollisionCheck.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Hudlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -88,7 +96,13 @@
     <ClInclude Include="..\Classes\Ladder.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\LevelSelScene.h" />
+    <ClInclude Include="..\Classes\LevelSelScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CollisionCheck.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HudLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

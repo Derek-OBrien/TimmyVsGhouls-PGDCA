@@ -38,6 +38,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\WaveFactory.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\LevelSelScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
@@ -85,6 +88,9 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\WaveFactory.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\LevelSelScene.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>

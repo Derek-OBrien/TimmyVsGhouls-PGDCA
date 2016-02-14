@@ -5,8 +5,6 @@
 Ladder::Ladder(){
 
 	m_ladderSprite = NULL;
-	visibleSize = Director::getInstance()->getVisibleSize();
-	origin = Director::getInstance()->getVisibleOrigin();
 }
 
 Ladder::~Ladder(){}

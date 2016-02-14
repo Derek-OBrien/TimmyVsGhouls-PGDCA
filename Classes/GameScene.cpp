@@ -29,9 +29,9 @@ bool GameScene::init()
 {
     if ( !Layer::init() ){return false;}
 
-
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	i = 0;
+    visibleSize = Director::getInstance()->getVisibleSize();
+    origin = Director::getInstance()->getVisibleOrigin();
 
 	//Add lane physics edges
 	m_laneEdge = new LaneEdge();
@@ -46,14 +46,16 @@ bool GameScene::init()
 	fg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(fg, 5);
 
+	m_hud = new Hud();
+	this->addChild(m_hud, 20);
 
 	//Add Player
 	m_player = new Player();
 	
 	//Enemy Wave
-	//m_wf = new WaveFactory();
+	m_wf = new WaveFactory();
 
-	projectile = new Projectile();
+	//projectile = new Projectile();
 
 	//Add Touch Listener
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -70,7 +72,15 @@ bool GameScene::init()
 	initialTouchPos[1] = 0;
 
 
-	loadLevel(0);
+	//Add Contact Listener for Collision
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+
+	//Load Level from plist
+	loadLevel();
+
 	//To call main Update
 	this->scheduleUpdate();
 
@@ -80,10 +90,7 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
-	//this->schedule(schedule_selector(GameScene::spawnWaves), 2);
-
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	//m_hud->updateAmount();
 
 	if (true == isTouchDown){
 		if (initialTouchPos[0] - currentTouchPos[0] > visibleSize.width * 0.05)
@@ -115,11 +122,19 @@ void GameScene::update(float dt){
 
 	m_player->changeAnimation(this, m_player->getCurrentState());
 
-
 	/*if touch on right half of screen*/
-	if (initialTouchPos[0] > visibleSize.width / 2){
-		m_player->fireProjectile(this);
+	if (initialTouchPos[0] > visibleSize.width / 2 && isTouchDown){
+		
+		projectile->spawnProjectile(Vec2(
+			m_player->getCurrentPosition().x + m_player->getContentSize().height / 2, 
+			m_player->getCurrentPosition().y + m_player->getContentSize().width), this);
+		
+		isTouchDown = false;
+
 	}
+
+	this->schedule(schedule_selector(GameScene::createWaves), m_spawnRate);
+
 }
 
 //On Touch
@@ -150,14 +165,19 @@ void GameScene::onTouchCancelled(Touch *touch, Event *event){
 }
 
 
+//OnContactBegin Call CheckCollision Class
+bool GameScene::onContactBegin(PhysicsContact &contact){
+	return collisionChecker->checkForCollision(contact, this, m_hud);
+}
 
-void GameScene::loadLevel(int level){
 
-	//m_currentLevel = level;
 
+void GameScene::loadLevel(){
+
+	
 	UserDefault* ud = UserDefault::getInstance();
 	m_currentLevel = ud->getIntegerForKey("level");
-	//ud->deleteValueForKey("level");
+
 	char file[200] = { 0 };
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
@@ -174,24 +194,22 @@ void GameScene::loadLevel(int level){
 	ValueMap m_levels = FileUtils::getInstance()->getValueMapFromFile(levelsFile);
 
 	auto& LadderData = m_levels["ladders"].asValueVector();
-	auto& EnemyData = m_levels["enemies"].asValueVector();
 	auto& PlayerData = m_levels["player"].asValueVector();
 	auto& MetaData = m_levels["meta"].asValueVector();
-	auto& TestData = m_levels["test"].asValueVector();
+	auto& EnemyData = m_levels["test"].asValueVector();
 
 	/*
 		Gat MetaData data from file
 	*/
 	for (auto i = MetaData.begin(); i != MetaData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
-
 	}
 	/*
 		Get player data from file
 	*/
 	for (auto i = PlayerData.begin(); i != PlayerData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
-		m_player->create(Vec2(sdata["posX"].asInt(), getLane(sdata["posY"].asInt())), this);
+		m_player->create(Vec2(sdata["posX"].asInt(), m_wf->getLane(sdata["posY"].asInt())), this);
 	}
 
 	/*
@@ -202,61 +220,27 @@ void GameScene::loadLevel(int level){
 		createLadders(sdata["x"].asInt(), sdata["y"].asInt());
 	}
 
-	/*
-		Gat enemy data from file
-	*/
 	for (auto i = EnemyData.begin(); i != EnemyData.end(); i++){
-		ValueMap& sdata = i->asValueMap();
-		enemy = new Enemy();
-		enemy->spawnEnemy(100, sdata["speed"].asInt(), this, sdata["lane"].asInt());
-	}
-
-	for (auto i = TestData.begin(); i != TestData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
 		
 		int amount = sdata["amount"].asInt();
 		int minLane = sdata["minlane"].asInt();
 		int maxLane = sdata["maxlane"].asInt();
-		int speed = sdata["speed"].asInt();
-		float spawnRate = sdata["spawnrate"].asFloat();
+		float speed = sdata["speed"].asFloat();
+		m_spawnRate = sdata["spawnrate"].asFloat();
 		
-
-		//createWaves(spawnRate, minLane, maxLane, speed, amount);
-		//enemy->spawnEnemy(100, sdata["speed"].asInt(), this, sdata["lane"].asInt());
+		m_wf->getData(amount, minLane, maxLane, speed);
 	}
 }
 
-void GameScene::spawnWaves(float dt){
-
-	for (int i = 0; i < m_enemiesPool.size(); i++){
-		m_enemiesPool.at(i)->update(dt);
-	}
-}
 
 //Create Waves
-void GameScene::createWaves(float dt, int mil, int mxl, float speed, int num) {
-	//m_wf->createWave(num,min,max,speed, this);
-
-
-	std::random_device rd;     // only used once to initialise (seed) engine
-
-	for (int i = 0; i < num; i++){
-		std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-		std::uniform_int_distribution<int> uni(mil, mxl); // guaranteed unbiased
-		auto randLane = uni(rng);
-
-		enemy = new Enemy();
-
-		m_enemiesPool.pushBack(enemy->spawnEnemy(100, speed, this, getLane(randLane)));
-	}
+void GameScene::createWaves(float dt) {
+	m_wf->createWave(this);
 }
-
 
 void GameScene::createLadders(int x, int y){
 	
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
 	m_ladder = new Ladder();
 
 	int pX;
@@ -272,48 +256,10 @@ void GameScene::createLadders(int x, int y){
 		break;
 	}
 
-	m_ladder->create(Vec2(pX, getLane(y)), this);
+	m_ladder->create(Vec2(pX, m_wf->getLane(y)), this);
 
 }
 
-int GameScene::getLane(int x){
-
-	Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	int l = 0;
-
-	switch (x)
-	{
-	case 0:
-		l = origin.y;
-		break;
-	case 1:
-		l = origin.y + visibleSize.height / 8;
-		break;
-	case 2:
-		l = origin.y + visibleSize.height / 4;
-		break;
-	case 3:
-		l = (origin.y + visibleSize.height / 2) - visibleSize.height / 8;
-		break;
-	case 4:
-		l = (origin.y + visibleSize.height / 2);
-		break;
-	case 5:
-		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 8;
-		break;
-	case 6:
-		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 4;
-		break;
-	case 7:
-		l = (origin.y + visibleSize.height) - visibleSize.height / 8;
-		break;
-	default:
-		break;
-	}
-
-	return l;
-}
 
 void GameScene::clearLayer(void){}
 void GameScene::resetLevel(void){}

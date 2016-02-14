@@ -1,7 +1,6 @@
 
 #include "LaneEdges.h"
 
-
 LaneEdge::LaneEdge(){
 
 }
@@ -19,7 +18,7 @@ void LaneEdge::create(Layer* layer){
 		10);											//Border
 
 	//Set up edgebody settings
-	bottomEdgeBody->setCollisionBitmask(0x001);		//Set Collision Bitmask
+	bottomEdgeBody->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	bottomEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	bottomEdgeBody->setMass(PHYSICS_INFINITY);
 
@@ -36,7 +35,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	topEdgeBody->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	topEdgeBody->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	topEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	topEdgeBody->setMass(PHYSICS_INFINITY);
 
@@ -59,7 +58,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody->setMass(PHYSICS_INFINITY);
 
@@ -77,7 +76,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody2->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody2->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody2->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody2->setMass(PHYSICS_INFINITY);
 
@@ -96,7 +95,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody3->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody3->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody3->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody3->setMass(PHYSICS_INFINITY);
 
@@ -113,7 +112,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody4->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody4->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody4->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody4->setMass(PHYSICS_INFINITY);
 
@@ -131,7 +130,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody7->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody7->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody7->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody7->setMass(PHYSICS_INFINITY);
 
@@ -150,7 +149,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody6->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody6->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody6->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody6->setMass(PHYSICS_INFINITY);
 
@@ -172,7 +171,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBody8->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBody8->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBody8->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBody8->setMass(PHYSICS_INFINITY);
 
@@ -192,7 +191,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBodyShort->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBodyShort->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBodyShort->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBodyShort->setMass(PHYSICS_INFINITY);
 
@@ -210,7 +209,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBodyShort2->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBodyShort2->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBodyShort2->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBodyShort2->setMass(PHYSICS_INFINITY);
 
@@ -227,7 +226,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBodyShort3->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBodyShort3->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBodyShort3->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBodyShort3->setMass(PHYSICS_INFINITY);
 
@@ -246,7 +245,7 @@ void LaneEdge::create(Layer* layer){
 		2);											//Border
 
 	//Set up edgebody settings
-	laneEdgeBodyShort4->setCollisionBitmask(0x02);		//Set Collision Bitmask
+	laneEdgeBodyShort4->setCollisionBitmask(LANE_BITMASK);		//Set Collision Bitmask
 	laneEdgeBodyShort4->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
 	laneEdgeBodyShort4->setMass(PHYSICS_INFINITY);
 

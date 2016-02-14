@@ -88,7 +88,7 @@ bool LevelSel::init()
 	this->addChild(menu, 1);
 
 	//Add Label
-	auto label = Label::createWithTTF("Select Level", "fonts/Marker Felt.ttf", 48);
+	auto label = Label::createWithTTF("Select Level", FONT, FONTSIZE);
 	label->setPosition(Vec2(
 		origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - label->getContentSize().height));

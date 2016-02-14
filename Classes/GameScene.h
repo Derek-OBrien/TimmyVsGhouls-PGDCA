@@ -12,7 +12,8 @@
 #include "WaveFactory.h"
 #include "LaneEdges.h"
 #include "Projectile.h"
-
+#include "CollisionCheck.h"
+#include "HudLayer.h"
 
 #include <vector>
 
@@ -33,19 +34,22 @@ public:
 	void onTouchCancelled(Touch *touch, Event *event);
 
 
+	bool onContactBegin(PhysicsContact &contact);
 
 	void update(float dt);
 	//Spawn Game objects
-	void createWaves(float dt, int min, int max, float speed, int num);
-	void spawnWaves(float dt);
+	void createWaves(float dt);
 
 
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
 
 	void setLevel(int level){ m_currentLevel = level; }
-	void loadLevel(int level);
+	void loadLevel();
 private:
+
+	Size visibleSize;
+	Vec2 origin;
 
 	//Set physics world
 	void SetPhysicsWorld(PhysicsWorld *world) { sceneWorld = world; };
@@ -53,19 +57,16 @@ private:
 
 
 	Player* m_player;
-	Enemy* enemy;
+	Enemy* m_enemy;
 	Ladder* m_ladder;
 	LaneEdge* m_laneEdge;
 	WaveFactory* m_wf;
 	Projectile* projectile;
+	CollisionCheck* collisionChecker;
+	Hud* m_hud;
 
-	Vector<Enemy*> m_enemiesPool;
-	//ValueMap m_levels;
-
-	Vector<Ladder*> m_ladderPool;
-
+	float m_spawnRate;
 	int m_currentLevel;
-	int m_ladderPoolIndex;
 
 	bool isTouchDown;
 
@@ -78,7 +79,7 @@ private:
 	void createLadders(int x, int y);
 	void clearLayer(void);
 
-	int getLane(int x);
+	int i;
 };
 
 

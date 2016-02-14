@@ -1,7 +1,6 @@
 #pragma once
 #include "cocos2d.h"
 
-#include "Enemy.h"
 #include "Projectile.h"
 
 USING_NS_CC;
@@ -26,8 +25,6 @@ public:
 	void create(Vec2(pos),Layer* layer);
 	void update();
 
-	void fireProjectile(Layer* layer);
-
 	// setter and getter for player state
 	int getCurrentState(){ return m_currState; };
 	void setCurrentState( int state){ m_currState = state; };
@@ -40,6 +37,8 @@ public:
 
 	Sprite* m_playerSprite;
 
+	bool canFire(){ return m_canFire; }
+	void setCanFire(bool fire){ m_canFire = fire; }
 protected:
 
 	int m_currState;
@@ -49,6 +48,7 @@ protected:
 	PhysicsBody* playerBody; // physics body of the player
 
 	//Projectile* projectile;
+	//Projectile projectile;
 
 	SpriteBatchNode* playerBatch;
 	SpriteFrameCache* cache;
