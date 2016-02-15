@@ -37,6 +37,7 @@ public:
 	bool onContactBegin(PhysicsContact &contact);
 
 	void update(float dt);
+	void updateTimer(float dt);
 	//Spawn Game objects
 	void createWaves(float dt);
 
@@ -80,6 +81,9 @@ private:
 	void clearLayer(void);
 
 	int i;
+
+	Label* m_timerLabel;
+	int m_timer;
 };
 
 

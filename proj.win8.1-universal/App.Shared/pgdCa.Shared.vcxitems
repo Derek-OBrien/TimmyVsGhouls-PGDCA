@@ -17,12 +17,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\CollisionCheck.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\Enemy.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\GameOverScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\GameScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\Hudlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\Ladder.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\LaneEdges.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\LevelSelScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\MainMenu.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\PauseScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\Player.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\Projectile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\Classes\SplashScene.cpp" />
@@ -36,14 +40,17 @@
       <DependentUpon>$(MSBuildThisFileDirectory)OpenGLESPage.xaml</DependentUpon>
     </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\CollisionCheck.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\Enemy.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\GameDefines.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\GameOverScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\GameScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\HudLayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\Ladder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\LaneEdges.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\LevelSelScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\MainMenu.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\PauseScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\Player.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\Projectile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\Classes\SplashScene.h" />

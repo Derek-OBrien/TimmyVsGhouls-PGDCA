@@ -253,4 +253,46 @@ void LaneEdge::create(Layer* layer){
 	laneEdgeNodeShort4->setPosition(Vec2(origin.x, origin.y + visibleSize.height / 4 + visibleSize.height / 16));
 	laneEdgeNodeShort4->setPhysicsBody(laneEdgeBodyShort4);
 	layer->addChild(laneEdgeNodeShort4, 6);
+
+
+
+
+	
+
+	/*Side Edges*/
+	//LEFT
+	auto leftEdgeBody = PhysicsBody::createEdgeSegment(
+		Vec2(origin.x - (visibleSize.width / 2), origin.y - (visibleSize.height / 2)),	//Point a Bottom left corner
+		Vec2(origin.x - (visibleSize.width / 2), visibleSize.height / 2),	    //Point b Bottom right corner
+		PHYSICSBODY_MATERIAL_DEFAULT,					//Material
+		10);											//Border
+
+	//Set up edgebody settings
+	leftEdgeBody->setCollisionBitmask(LEFTSIDE_BITMASK);		//Set Collision Bitmask
+	leftEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
+	leftEdgeBody->setMass(PHYSICS_INFINITY);
+
+	auto leftEdgeNode = Node::create();	//Node for bottom edge collision
+	leftEdgeNode->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	leftEdgeNode->setPhysicsBody(leftEdgeBody);
+	layer->addChild(leftEdgeNode, 6);
+
+
+	//RIGHT 
+	auto rightEdgeBody = PhysicsBody::createEdgeSegment(
+		Vec2(origin.x + (visibleSize.width / 2), origin.y - (visibleSize.height / 2)),	//Point a Bottom left corner
+		Vec2(origin.x + (visibleSize.width / 2), visibleSize.height / 2),	    //Point b Bottom right corner
+		PHYSICSBODY_MATERIAL_DEFAULT,					//Material
+		10);											//Border
+
+	//Set up edgebody settings
+	rightEdgeBody->setCollisionBitmask(RIGHTSIDE_BITMASK);		//Set Collision Bitmask
+	rightEdgeBody->setContactTestBitmask(true);						//Turn on Collision Bitmask so it is picked up
+	rightEdgeBody->setMass(PHYSICS_INFINITY);
+
+	auto rightEdgeNode = Node::create();	//Node for bottom edge collision
+	rightEdgeNode->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	rightEdgeNode->setPhysicsBody(rightEdgeBody);
+	layer->addChild(rightEdgeNode, 6);
+
 }

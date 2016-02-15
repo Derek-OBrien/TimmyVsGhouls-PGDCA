@@ -154,12 +154,12 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\LaneEdges.cpp" />
     <ClCompile Include="..\Classes\LevelSelScene.cpp" />
     <ClCompile Include="..\Classes\PauseScene.cpp" />
+    <ClCompile Include="..\Classes\Projectile.cpp" />
     <ClCompile Include="..\Classes\SplashScene.cpp" />
     <ClCompile Include="..\Classes\MainMenu.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
     <ClCompile Include="..\Classes\WaveFactory.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />

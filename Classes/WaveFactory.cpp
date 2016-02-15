@@ -5,7 +5,7 @@ USING_NS_CC;
 
 WaveFactory::WaveFactory(){
 	minLane = 0;
-	maxLane = 6;
+	maxLane = 5;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 }
@@ -62,9 +62,9 @@ int WaveFactory::getLane(int x){
 	case 5:
 		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 8;
 		break;
-	case 6:
+	/*case 6:
 		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 4;
-		break;
+		break;*/
 	default:
 		break;
 	}

@@ -50,8 +50,8 @@ bool GameOverScene::init()
 		CC_CALLBACK_1(GameOverScene::restartLevel, this));
 
 	restart->setPosition(Vec2(
-		origin.x + visibleSize.width / 8,		//X Position
-		origin.y + visibleSize.height / 2));	//Y Position
+		origin.x + visibleSize.width / 10,		//X Position
+		origin.y + visibleSize.height / 8));	//Y Position
 
 
 
@@ -62,8 +62,8 @@ bool GameOverScene::init()
 		CC_CALLBACK_1(GameOverScene::gotoStart, this));
 
 	mainmenu->setPosition(Vec2(
-		origin.x + visibleSize.width - visibleSize.width / 8,		//X Position
-		origin.y + visibleSize.height / 2));	//Y Position
+		origin.x + visibleSize.width - visibleSize.width / 10,		//X Position
+		origin.y + visibleSize.height / 8));	//Y Position
 
 	// create menu, it's an autorelease object
 	auto menu = Menu::create(closeItem, NULL);
@@ -74,16 +74,81 @@ bool GameOverScene::init()
 	this->addChild(menu, 1);
 
 
-	auto label = Label::createWithTTF("Game Over Scene", FONT, FONTSIZE);
-	label->setColor(FONTCOLOR);
 
-	label->setPosition(Vec2(
-		origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 2 + label->getContentSize().height));
-	this->addChild(label, 1);
 
+	UserDefault* ud = UserDefault::getInstance();
+
+
+	auto yourScore = Label::createWithTTF("Your Score", FONT, FONTSIZE);
+	yourScore->setColor(FONTCOLOR);
+	yourScore->setPosition(Vec2(
+		origin.x + visibleSize.width / 2 - yourScore->getContentSize().width,
+		origin.y + visibleSize.height / 2));
+	this->addChild(yourScore, 1);
+
+	auto enemyScore = Label::createWithTTF("Enemy Score", FONT, FONTSIZE);
+	enemyScore->setColor(FONTCOLOR);
+	enemyScore->setPosition(Vec2(
+		origin.x + visibleSize.width / 2 + enemyScore->getContentSize().width,
+		origin.y + visibleSize.height / 2));
+	this->addChild(enemyScore, 1);
+
+
+
+
+	/*Get and display Player Score for level*/
+	char str[30] = { 0 };
+	char strr[10] = { 0 };
+	sprintf(str, "playerScorelevel%d", ud->getIntegerForKey("level"));
+
+	int pscore = ud->getIntegerForKey(str);
+	sprintf(strr, "[ %d ]", pscore);
+
+	auto Score = Label::createWithTTF(strr, FONT, FONTSIZE);
+	Score->setColor(FONTCOLOR);
+	Score->setPosition(Vec2(
+		origin.x + visibleSize.width / 2 - yourScore->getContentSize().width ,
+		origin.y + visibleSize.height / 2 - Score->getContentSize().height ));
+	this->addChild(Score, 1);
 	
-	auto sprite = Sprite::create("bg2.png");
+
+	/*Get and display Enemy Score for level*/
+	char str2[30] = { 0 };
+	char strr2[10] = { 0 };
+	sprintf(str2, "enemyScorelevel%d", ud->getIntegerForKey("level"));
+
+	int escore = ud->getIntegerForKey(str2);
+	sprintf(strr2, "[ %d ]", escore);
+
+	auto eScore = Label::createWithTTF(strr2, FONT, FONTSIZE);
+	eScore->setColor(FONTCOLOR);
+	eScore->setPosition(Vec2(
+		origin.x + visibleSize.width / 2 + enemyScore->getContentSize().width ,
+		origin.y + visibleSize.height / 2 -  eScore->getContentSize().height));
+	this->addChild(eScore, 1);
+
+
+	if (pscore > escore){
+		auto label = Label::createWithTTF("You Win", FONT, FONTSIZE);
+		label->setColor(FONTCOLOR);
+		label->setPosition(Vec2(
+			origin.x + visibleSize.width / 2,
+			origin.y + visibleSize.height / 2 - label->getContentSize().height));
+		this->addChild(label, 1);
+	}
+	else{
+		auto label = Label::createWithTTF("You Loose", FONT, FONTSIZE);
+		label->setColor(FONTCOLOR);
+		label->setPosition(Vec2(
+			origin.x + visibleSize.width / 2,
+			origin.y + visibleSize.height / 2 - label->getContentSize().height));
+		this->addChild(label, 1);
+	}
+
+
+
+
+	auto sprite = Sprite::create("bgmenu.png");
 	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(sprite, 0);
 

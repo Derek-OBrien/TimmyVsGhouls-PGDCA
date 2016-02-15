@@ -12,7 +12,8 @@
 #define LANE_BITMASK 0x02
 #define ENEMY_BITMASK 0x03
 #define PROJECTILE_BITMASK 0x04
-
+#define LEFTSIDE_BITMASK 0x05
+#define RIGHTSIDE_BITMASK 0x06
 
 #define FONT "fonts/FFF_Tusj.ttf"
 #define FONTSIZE 76

@@ -102,7 +102,7 @@ bool MainMenu::init()
 
 
 	//Add Background
-	auto bg = Sprite::create("bg2.png");
+	auto bg = Sprite::create("bgmenu.png");
 	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, 0);
 

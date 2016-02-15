@@ -12,7 +12,7 @@ Scene* GameScene::createScene()
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
 
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 	scene->getPhysicsWorld()->setGravity(Vect(0.0f, -18.8f));
 
 
@@ -55,6 +55,16 @@ bool GameScene::init()
 	//Enemy Wave
 	m_wf = new WaveFactory();
 
+	/*m_timer = 60;
+	auto temp = __String::createWithFormat("[ %i ]", m_timer);
+	m_timerLabel = Label::createWithTTF(temp->getCString(), FONT, 120);
+	m_timerLabel->setPosition(Point(
+		origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height - m_timerLabel->getContentSize().height / 2));
+
+	m_timerLabel->setColor(FONTCOLOR);
+	this->addChild(m_timerLabel, 3);
+	*/
 	//projectile = new Projectile();
 
 	//Add Touch Listener
@@ -90,7 +100,8 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
-	//m_hud->updateAmount();
+	this->schedule(schedule_selector(GameScene::updateTimer),1.0f);
+	this->schedule(schedule_selector(GameScene::createWaves), m_spawnRate);
 
 	if (true == isTouchDown){
 		if (initialTouchPos[0] - currentTouchPos[0] > visibleSize.width * 0.05)
@@ -118,23 +129,30 @@ void GameScene::update(float dt){
 			m_player->setCurrentState(CLIMB);
 			isTouchDown = false;
 		}
+		else if (initialTouchPos[1] < m_player->getPositionY()){
+			CCLOG("Teleport Up");
+			m_player->setCurrentState(TELEPORT);
+			isTouchDown = false;
+		}
+
 	}
 
 	m_player->changeAnimation(this, m_player->getCurrentState());
 
 	/*if touch on right half of screen*/
 	if (initialTouchPos[0] > visibleSize.width / 2 && isTouchDown){
-		
+
 		projectile->spawnProjectile(Vec2(
-			m_player->getCurrentPosition().x + m_player->getContentSize().height / 2, 
+			m_player->getCurrentPosition().x + m_player->getContentSize().height / 2,
 			m_player->getCurrentPosition().y + m_player->getContentSize().width), this);
-		
+
 		isTouchDown = false;
-
 	}
+}
 
-	this->schedule(schedule_selector(GameScene::createWaves), m_spawnRate);
 
+void GameScene::updateTimer(float dt){
+	m_hud->updateTimer();
 }
 
 //On Touch
@@ -196,14 +214,7 @@ void GameScene::loadLevel(){
 	auto& LadderData = m_levels["ladders"].asValueVector();
 	auto& PlayerData = m_levels["player"].asValueVector();
 	auto& MetaData = m_levels["meta"].asValueVector();
-	auto& EnemyData = m_levels["test"].asValueVector();
 
-	/*
-		Gat MetaData data from file
-	*/
-	for (auto i = MetaData.begin(); i != MetaData.end(); i++){
-		ValueMap& sdata = i->asValueMap();
-	}
 	/*
 		Get player data from file
 	*/
@@ -220,7 +231,10 @@ void GameScene::loadLevel(){
 		createLadders(sdata["x"].asInt(), sdata["y"].asInt());
 	}
 
-	for (auto i = EnemyData.begin(); i != EnemyData.end(); i++){
+	/*
+		Get Level Meta Data
+	*/
+	for (auto i = MetaData.begin(); i != MetaData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
 		
 		int amount = sdata["amount"].asInt();

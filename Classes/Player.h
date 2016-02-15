@@ -11,7 +11,8 @@ enum ePlayerState{
 	CLIMB,
 	DROP,
 	SHOOT,
-	STILL
+	STILL,
+	TELEPORT
 };
 
 

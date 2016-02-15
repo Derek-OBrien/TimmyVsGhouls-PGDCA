@@ -45,9 +45,6 @@
     <ClCompile Include="..\Classes\LaneEdges.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Projectile.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\LevelSelScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -56,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Hudlayer.cpp" />
     <ClCompile Include="..\Classes\PauseScene.cpp" />
+    <ClCompile Include="..\Classes\Projectile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

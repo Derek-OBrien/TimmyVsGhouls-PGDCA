@@ -20,6 +20,8 @@ void Enemy::create(int health, float speed, Layer* layer, int lane){
 	enemyBody->setGravityEnable(true);
 	enemySprite->setPhysicsBody(enemyBody);
 	enemyBody->setCollisionBitmask(ENEMY_BITMASK);
+	enemyBody->setTag(02);
+
 	enemyBody->setContactTestBitmask(true);
 	enemyBody->setRotationEnable(false);
 

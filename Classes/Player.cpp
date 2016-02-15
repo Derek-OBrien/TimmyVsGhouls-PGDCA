@@ -57,6 +57,8 @@ void Player::changeAnimation(Layer* layer, int state){
 		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
 		if (m_playerSprite->getPositionX() > origin.x){
 			m_playerSprite->setPositionX(m_playerSprite->getPositionX() -5.0);
+//			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(-30, 0), Vec2::ZERO);
+
 		}
 		break;
 	case RIGHT:
@@ -69,6 +71,8 @@ void Player::changeAnimation(Layer* layer, int state){
 		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
 		if (m_playerSprite->getPositionX() < origin.x + visibleSize.width / 4){
 			m_playerSprite->setPositionX(m_playerSprite->getPositionX() + 5.0);
+//			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(30, 0), Vec2::ZERO);
+
 		}
 		break;
 	case CLIMB:
@@ -81,7 +85,9 @@ void Player::changeAnimation(Layer* layer, int state){
 		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
 
 		if (m_playerSprite->getPositionY() < visibleSize.height + origin.y - m_playerSprite->getContentSize().height){
-			m_playerSprite->setPositionY(m_playerSprite->getPositionY() + 5.0);
+			//m_playerSprite->setPositionY(m_playerSprite->getPositionY() + 5.0);
+
+			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, 50), Vec2::ZERO);
 		}
 
 		break;
@@ -95,7 +101,22 @@ void Player::changeAnimation(Layer* layer, int state){
 		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
 		
 		if (m_playerSprite->getPositionY() > origin.y - visibleSize.height / 2){
-			m_playerSprite->setPositionY(m_playerSprite->getPositionY() - 5.0);
+		//	m_playerSprite->setPositionY(m_playerSprite->getPositionY() - 5.0);
+			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, -50), Vec2::ZERO);
+
+		}
+		break;
+	case TELEPORT:
+		for (int i = 1; i < 5; i++){
+			sprintf(str, "stickman/c_0%d.png", i);
+			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
+			animFrames.pushBack(frame);
+		}
+		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
+		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
+
+		if (m_playerSprite->getPositionY() > origin.y - visibleSize.height / 2){
+			m_playerSprite->setPositionY(m_playerSprite->getPositionY() + visibleSize.height / 8);
 		}
 		break;
 	default:
