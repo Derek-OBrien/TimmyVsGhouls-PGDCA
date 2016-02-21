@@ -5,39 +5,25 @@
 #include "LevelSelScene.h"
 USING_NS_CC;
 
-Scene* MainMenu::createScene()
-{
-	// 'scene' is an autorelease object
+Scene* MainMenu::createScene(){
+
 	auto scene = Scene::create();
-
-	// 'layer' is an autorelease object
 	auto layer = MainMenu::create();
-
-	// add layer as a child to scene
 	scene->addChild(layer);
 
-	// return the scene
 	return scene;
 }
 
-// on "init" you need to initialize your instance
-bool MainMenu::init()
-{
-	//////////////////////////////
-	// 1. super init first
-	if (!Layer::init())
-	{
+
+bool MainMenu::init(){
+
+	if (!Layer::init())	{
 		return false;
 	}
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	/////////////////////////////
-	// 2. add a menu item with "X" image, which is clicked to quit the program
-	//    you may modify it.
-
-	// add a "close" icon to exit the progress. it's an autorelease object
 	auto closeItem = MenuItemImage::create(
 		"menu_images/exit.png",
 		"menu_images/exit.png",
@@ -57,16 +43,6 @@ bool MainMenu::init()
 		origin.x + visibleSize.width / 4,		//X Position
 		origin.y + visibleSize.height / 2));	//Y Position
 
-	// create and set position for Settings
-	auto settingsItem = MenuItemImage::create(
-		"menu_images/SettingsNormal.png",
-		"menu_images/SettingsSelected.png",
-		CC_CALLBACK_1(MainMenu::GoToSettingsScene, this));
-
-	settingsItem->setPosition(Vec2(
-		origin.x + visibleSize.width / 2,		//X Position
-		origin.y + visibleSize.height / 2));	//Y Position
-
 
 	
 	
@@ -78,17 +54,9 @@ bool MainMenu::init()
 
 	// add items to the menu
 	menu->addChild(startItem);
-	menu->addChild(settingsItem);
-
-
 	this->addChild(menu, 1);
 
-	/////////////////////////////
-	// 3. add your codes below...
-
-	// add a label shows "Hello World"
-	// create and initialize a label
-
+	
 	auto label = Label::createWithTTF("Menu", FONT, FONTSIZE);
 	label->setColor(FONTCOLOR);
 	// position the label on the center of the screen
@@ -131,8 +99,6 @@ void MainMenu::GoToGameScene(Ref* pSender){
 
 //Call Settings Scene When Settings Item Selected
 void MainMenu::GoToSettingsScene(Ref* pSender){
-	//call next scene to load
-	//auto scene = SettingsScene::createScene();
-	//Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
+
 }
 

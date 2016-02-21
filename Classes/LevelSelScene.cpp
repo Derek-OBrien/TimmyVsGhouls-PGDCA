@@ -4,22 +4,14 @@
 
 USING_NS_CC;
 
-Scene* LevelSel::createScene()
-{
-	// 'scene' is an autorelease object
+Scene* LevelSel::createScene(){
 	auto scene = Scene::create();
-
-	// 'layer' is an autorelease object
 	auto layer = LevelSel::create();
-
-	// add layer as a child to scene
 	scene->addChild(layer);
-
-	// return the scene
 	return scene;
 }
 
-// on "init" you need to initialize your instance
+
 bool LevelSel::init(){
 	if (!Layer::init()){return false;}
 
@@ -36,8 +28,10 @@ bool LevelSel::init(){
 		origin.y + closeItem->getContentSize().height / 2));
 
 
+	//set up userdefault to store level details
 	UserDefault* ud = UserDefault::getInstance();
 
+	//if first time playing set level0 to true rest to false
 	if (!ud->getBoolForKey("firstPlay")){
 		ud->setBoolForKey("firstPlay", true);
 	}
@@ -47,7 +41,8 @@ bool LevelSel::init(){
 		ud->setBoolForKey("level2", false);
 	}
 
-	// create and set position for Start Game button
+
+	// create and set position for level button
 	auto level0 = MenuItemImage::create(
 		"levelbtns/zero.png",
 		"levelbtns/zero.png",
@@ -57,7 +52,8 @@ bool LevelSel::init(){
 		origin.x + visibleSize.width / 6,		//X Position
 		(origin.y + visibleSize.height) - visibleSize.height /4));	//Y Position
 
-	// create and set position for Settings
+	// create and set position for level 1 button
+	//create two buttons one for open one for locked
 	auto level1 = MenuItemImage::create(
 		"levelbtns/one.png",
 		"levelbtns/one.png",
@@ -76,7 +72,8 @@ bool LevelSel::init(){
 		origin.x + visibleSize.width / 2,		//X Position
 		(origin.y + visibleSize.height) - visibleSize.height / 4));	//Y Position
 
-	// create and set position for Settings
+	// create and set position for Level 2
+	//create two buttons one for open one for locked
 	auto level2 = MenuItemImage::create(
 		"levelbtns/two.png",
 		"levelbtns/two.png",
@@ -103,10 +100,12 @@ bool LevelSel::init(){
 
 
 	// add items to the menu
+	// Add locked buttons first time round
 	menu->addChild(level0);
 	menu->addChild(level1X);
 	menu->addChild(level2X);
 
+	//If levels unlockd replace locked buttons with normal
 	if (ud->getBoolForKey("level1")){
 		menu->addChild(level1);
 		menu->removeChild(level1X, true);
@@ -141,19 +140,18 @@ void LevelSel::menuCloseCallback(Ref* pSender){
 }
 
 //Call Game Scene When Start Item Selected
-void LevelSel::GoToGameScene(Ref* pSender, int x){
+//Pass in level number which corrispondes to level
+void LevelSel::GoToGameScene(Ref* pSender, int level){
 
-
+	//Save level so it can be read in game scene
 	UserDefault* ud = UserDefault::getInstance();
-	ud->setIntegerForKey("level", x);
+	ud->setIntegerForKey("level", level);
 	
-
-		auto scene = GameScene::createScene();
-		Director::getInstance()->replaceScene(TransitionFade::create(0.1, scene));
-
-
+	auto scene = GameScene::createScene();
+	Director::getInstance()->replaceScene(TransitionFade::create(0.3, scene));
 }
 
+//If locked level button selected display message
 void LevelSel::onLockedButtonPress(Ref* pSender){
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -161,7 +159,7 @@ void LevelSel::onLockedButtonPress(Ref* pSender){
 	auto label = Label::createWithTTF("Level Not Unlocked", FONT, FONTSIZE);
 	label->setPosition(Vec2(
 		origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 2 ));
+		origin.y + visibleSize.height / 2  - label->getContentSize().height / 2 ));
 	label->setColor(FONTCOLOR);
 	this->addChild(label, 1);
 }

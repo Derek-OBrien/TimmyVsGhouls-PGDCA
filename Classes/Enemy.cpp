@@ -10,6 +10,7 @@ Enemy::Enemy(){
 }
 
 
+//Create enemy
 void Enemy::create(int health, float speed, Layer* layer, int lane){
 
 	auto enemySprite = Sprite::create("enemy.png");
@@ -33,9 +34,7 @@ void Enemy::create(int health, float speed, Layer* layer, int lane){
 
 	
 	//Add to layer
-	layer->addChild(enemySprite, 5);
-
-	
+	layer->addChild(enemySprite, 3);
 }
 
 

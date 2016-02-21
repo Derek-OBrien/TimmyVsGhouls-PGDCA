@@ -78,7 +78,7 @@ bool GameOverScene::init()
 
 	UserDefault* ud = UserDefault::getInstance();
 
-
+	/*Socre Labels*/
 	auto yourScore = Label::createWithTTF("Your Score", FONT, FONTSIZE);
 	yourScore->setColor(FONTCOLOR);
 	yourScore->setPosition(Vec2(
@@ -128,13 +128,29 @@ bool GameOverScene::init()
 	this->addChild(eScore, 1);
 
 
+	/* check to see if player won or lost */
 	if (pscore > escore){
 		auto label = Label::createWithTTF("You Win", FONT, FONTSIZE);
 		label->setColor(FONTCOLOR);
 		label->setPosition(Vec2(
 			origin.x + visibleSize.width / 2,
-			origin.y + visibleSize.height / 2 - label->getContentSize().height));
+			origin.y + visibleSize.height - label->getContentSize().height));
 		this->addChild(label, 1);
+
+		char strtemp[30] = { 0 };
+		sprintf(strtemp, "Level %d Unlocked", ud->getIntegerForKey("level") + 1);
+
+		auto label2 = Label::createWithTTF(strtemp, FONT, FONTSIZE);
+		label2->setColor(FONTCOLOR);
+		label2->setPosition(Vec2(
+			origin.x + visibleSize.width / 2,
+			origin.y + visibleSize.height - label2->getContentSize().height * 2));
+		this->addChild(label2, 1);
+
+		/*Unlock Next level*/
+		char level[10] = { 0 };
+		sprintf(level, "level%d", (ud->getIntegerForKey("level") + 1));
+		ud->setBoolForKey(level, true);
 	}
 	else{
 		auto label = Label::createWithTTF("You Loose", FONT, FONTSIZE);
@@ -143,10 +159,8 @@ bool GameOverScene::init()
 			origin.x + visibleSize.width / 2,
 			origin.y + visibleSize.height / 2 - label->getContentSize().height));
 		this->addChild(label, 1);
+
 	}
-
-
-
 
 	auto sprite = Sprite::create("bgmenu.png");
 	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));

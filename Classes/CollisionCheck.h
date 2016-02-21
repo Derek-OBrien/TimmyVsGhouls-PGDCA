@@ -9,6 +9,7 @@ class CollisionCheck
 public:
 	CollisionCheck();
 	
+	/*Check for collisons in game and update score*/
 	bool checkForCollision(PhysicsContact &contact, Layer* layer, Hud* hud);
 private:
 

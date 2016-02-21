@@ -4,6 +4,7 @@
 #include "PauseScene.h"
 #include "GameOverScene.h"
 
+#include "SimpleAudioEngine.h"
 Hud::Hud(){
 	Hud::init();
 }
@@ -24,14 +25,15 @@ bool Hud::init(){
 		CC_CALLBACK_1(Hud::goToPauseScene, this));
 
 	pauseBtn->setPosition(Vec2(
-		origin.x + visibleSize.width /2 ,			//X Position
-		origin.y + visibleSize.height - visibleSize.height / 8 - pauseBtn->getContentSize().height / 3));		//Y Position
+		origin.x + visibleSize.width /2 ,	
+		origin.y + visibleSize.height - visibleSize.height / 8 - pauseBtn->getContentSize().height / 3));
 
 	pauseBtn->setScaleY(0.5);
 	auto menu = Menu::create(pauseBtn, NULL);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 
+	//create and add lables to hud
 	m_PamountLabel = addPAmountLabel();
 	m_EamountLabel = addEAmountLabel();
 	m_timerLabel = addTimerLabel();
@@ -79,20 +81,21 @@ Label* Hud::addTimerLabel(){
 	return m_timerLabel;
 }
 
-
+//Update score label for player
 void Hud::updatePAmount(int amt){
 	m_Pamount += amt;
 	auto temp = __String::createWithFormat("[ %i ]", getPAmount());
 	m_PamountLabel->setString(temp->getCString());
 }
 
-
+//Update socre lable for enemy
 void Hud::updateEAmount(int amt){
 	m_Eamount += amt;
 	auto temp = __String::createWithFormat("[ %i ]", getEAmount());
 	m_EamountLabel->setString(temp->getCString());
 }
 
+//Update level Timer
 void Hud::updateTimer(){
 
 	m_timer -= 1;
@@ -100,14 +103,9 @@ void Hud::updateTimer(){
 	m_timerLabel->setString(temp->getCString());
 
 	if (m_timer == 0){
-		UserDefault* ud = UserDefault::getInstance();
 
-		/*If player win open next level*/
-		if (getPAmount() >= getEAmount()){
-			char level[10] = { 0 };
-			sprintf(level, "level%d", (ud->getIntegerForKey("level") + 1));
-			ud->setBoolForKey(level, true);
-		}
+		CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+		UserDefault* ud = UserDefault::getInstance();
 
 		/*Save Scores for current level*/
 		char saveEscore[30] = { 0 };
@@ -119,13 +117,14 @@ void Hud::updateTimer(){
 		ud->setIntegerForKey(savePscore, getPAmount());
 
 		auto scene = GameOverScene::createScene();
-		Director::getInstance()->replaceScene(TransitionFade::create(TRANSITION_TIME, scene));
+		Director::getInstance()->replaceScene(TransitionCrossFade::create(TRANSITION_TIME, scene));
 	}
 }
 
 
 //Go to Pause Scene
 void Hud::goToPauseScene(Ref* pSender){
+	CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 	auto scene = PauseScene::createScene();
 	Director::getInstance()->pushScene(TransitionFade::create(TRANSITION_TIME, scene));
 }

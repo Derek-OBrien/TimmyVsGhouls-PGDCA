@@ -30,7 +30,7 @@ public:
 	int getCurrentState(){ return m_currState; };
 	void setCurrentState( int state){ m_currState = state; };
 
-	void changeAnimation(Layer* layer, int state);
+	void initActions(Layer* layer);
 	void releaseActions();
 
 	Vec2 getCurrentPosition();
@@ -47,9 +47,6 @@ protected:
 	bool m_canFire;
 	
 	PhysicsBody* playerBody; // physics body of the player
-
-	//Projectile* projectile;
-	//Projectile projectile;
 
 	SpriteBatchNode* playerBatch;
 	SpriteFrameCache* cache;

@@ -2,7 +2,7 @@
 #include "GameScene.h"
 #include "LevelSelScene.h"
 #include "MainMenu.h"
-
+#include "SimpleAudioEngine.h"
 Scene* PauseScene::createScene(){
 
 	auto scene = Scene::create();
@@ -109,6 +109,7 @@ void PauseScene::gotoStart(Ref* pSender){
 }
 
 void PauseScene::returnToGame(Ref* pSender){
+	CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 	auto scene = GameScene::createScene();
 	Director::getInstance()->popScene();
 }

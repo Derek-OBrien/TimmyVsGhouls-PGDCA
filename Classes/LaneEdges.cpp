@@ -5,6 +5,9 @@ LaneEdge::LaneEdge(){
 
 }
 
+/*Create lane edges so game objects dont fall through edges
+	Messy but works 
+*/
 void LaneEdge::create(Layer* layer){
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();

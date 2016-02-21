@@ -38,6 +38,7 @@ public:
 
 	void update(float dt);
 	void updateTimer(float dt);
+	void updatePlayer(float dt);
 	//Spawn Game objects
 	void createWaves(float dt);
 
@@ -47,6 +48,7 @@ public:
 
 	void setLevel(int level){ m_currentLevel = level; }
 	void loadLevel();
+
 private:
 
 	Size visibleSize;
@@ -74,11 +76,7 @@ private:
 	float initialTouchPos[2];
 	float currentTouchPos[2];
 
-
-	void resetLevel(void);
-	void levelCompleted(void);
 	void createLadders(int x, int y);
-	void clearLayer(void);
 
 	int i;
 

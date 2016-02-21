@@ -6,7 +6,9 @@ Projectile::Projectile(){
 	m_damage = 100;
 }
 
-
+/*
+	Create Projectiles and add physics body 
+*/
 void Projectile::spawnProjectile(Vec2 position, Layer* layer){
 
 
@@ -26,7 +28,7 @@ void Projectile::spawnProjectile(Vec2 position, Layer* layer){
 	pyBody->setTag(01);
 
 	proSprite->setPhysicsBody(pyBody);
-	proSprite->setPosition(position.x, position.y + proSprite->getContentSize().height / 2);
+	proSprite->setPosition(position.x, position.y + proSprite->getContentSize().height);
 	proSprite->setAnchorPoint(Vec2(0, 0));
 
 	auto projectileMove = MoveBy::create(4, Vec2(visibleSize.width, 0));

@@ -10,6 +10,7 @@ WaveFactory::WaveFactory(){
 	origin = Director::getInstance()->getVisibleOrigin();
 }
 
+//used to get data from game scene
 void WaveFactory::getData(int amo, int min, int max, float sp){
 
 	minLane = min;
@@ -18,14 +19,16 @@ void WaveFactory::getData(int amo, int min, int max, float sp){
 	speed = sp;
 }
 
+//create the wave with data from level files
 void WaveFactory::createWave(Layer* layer){
 
-	std::random_device rd;     // only used once to initialise (seed) engine
-	std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-	std::uniform_int_distribution<int> uni(minLane, maxLane); // guaranteed unbiased
-
+	//generate random lane depending on level min / max lane
+	std::random_device rd;    
+	std::mt19937 rng(rd());   
+	std::uniform_int_distribution<int> uni(minLane, maxLane);
 	int randLane = uni(rng);
 
+	//Create enemy on the lane
 	enemy = new Enemy();
 	enemy->create(100, speed, layer, getLane(randLane));
 
@@ -38,7 +41,8 @@ void WaveFactory::update(float dt){
 		
 }
 
-
+//Lanes numbered 0 to 5 
+//convert number to acutal position on screen
 int WaveFactory::getLane(int x){
 	int l = 0;
 
@@ -62,9 +66,6 @@ int WaveFactory::getLane(int x){
 	case 5:
 		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 8;
 		break;
-	/*case 6:
-		l = (origin.y + visibleSize.height / 2) + visibleSize.height / 4;
-		break;*/
 	default:
 		break;
 	}

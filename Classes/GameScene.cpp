@@ -5,22 +5,19 @@
 #include "GameScene.h"
 #include "GameOverScene.h"
 
+#include "SimpleAudioEngine.h"  
+
 USING_NS_CC;
 
-Scene* GameScene::createScene()
-{
-    // 'scene' is an autorelease object
+Scene* GameScene::createScene(){
     auto scene = Scene::createWithPhysics();
 
 	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-	scene->getPhysicsWorld()->setGravity(Vect(0.0f, -18.8f));
-
+	scene->getPhysicsWorld()->setGravity(Vect(0.0f, -9.8f));
 
     auto layer = GameScene::create();
 	layer->SetPhysicsWorld(scene->getPhysicsWorld());
-
     scene->addChild(layer);
-
     return scene;
 }
 
@@ -29,13 +26,17 @@ bool GameScene::init()
 {
     if ( !Layer::init() ){return false;}
 
-	i = 0;
+	//Play background audio depending on platform
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+	CocosDenshion::SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/bg.mp3", true);
+#else
+	CocosDenshion::SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5);
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("audio/bg.wav", true);
+#endif
+	
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
-
-	//Add lane physics edges
-	m_laneEdge = new LaneEdge();
-	m_laneEdge->create(this);
 
 	//Add Background
 	auto bg = Sprite::create("bg2.png");
@@ -44,28 +45,8 @@ bool GameScene::init()
 
 	auto fg = Sprite::create("fg.png");
 	fg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	this->addChild(fg, 5);
+	this->addChild(fg, 10);
 
-	m_hud = new Hud();
-	this->addChild(m_hud, 20);
-
-	//Add Player
-	m_player = new Player();
-	
-	//Enemy Wave
-	m_wf = new WaveFactory();
-
-	/*m_timer = 60;
-	auto temp = __String::createWithFormat("[ %i ]", m_timer);
-	m_timerLabel = Label::createWithTTF(temp->getCString(), FONT, 120);
-	m_timerLabel->setPosition(Point(
-		origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height - m_timerLabel->getContentSize().height / 2));
-
-	m_timerLabel->setColor(FONTCOLOR);
-	this->addChild(m_timerLabel, 3);
-	*/
-	//projectile = new Projectile();
 
 	//Add Touch Listener
 	auto touchListener = EventListenerTouchOneByOne::create();
@@ -74,7 +55,6 @@ bool GameScene::init()
 	touchListener->onTouchMoved = CC_CALLBACK_2(GameScene::onTouchMoved, this);
 	touchListener->onTouchEnded = CC_CALLBACK_2(GameScene::onTouchEnded, this);
 	touchListener->onTouchCancelled = CC_CALLBACK_2(GameScene::onTouchCancelled, this);
-
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 	
 	isTouchDown = false;
@@ -87,6 +67,19 @@ bool GameScene::init()
 	contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+	//Add lane physics edges
+	m_laneEdge = new LaneEdge();
+	m_laneEdge->create(this);
+
+	//Add Hud Layer
+	m_hud = new Hud();
+	this->addChild(m_hud, 20);
+
+	//Add Player
+	m_player = new Player();
+
+	//Wave Factory For Enemies
+	m_wf = new WaveFactory();
 
 	//Load Level from plist
 	loadLevel();
@@ -100,84 +93,84 @@ bool GameScene::init()
 
 void GameScene::update(float dt){
 
+	//m_player->update();
+	this->schedule(schedule_selector(GameScene::updatePlayer), 0.2f);
+
+	//Update timer and spawn enemies dependent on their level spawn rate
 	this->schedule(schedule_selector(GameScene::updateTimer),1.0f);
 	this->schedule(schedule_selector(GameScene::createWaves), m_spawnRate);
 
+	//Check for touch and check which direction swipe was
 	if (true == isTouchDown){
-		if (initialTouchPos[0] - currentTouchPos[0] > visibleSize.width * 0.05)
-		{
-			CCLOG("SWIPED LEFT");
+		if (initialTouchPos[0] - currentTouchPos[0] > visibleSize.width * 0.05){
 			m_player->setCurrentState(LEFT);
-
 			isTouchDown = false;
 		}
-		else if (initialTouchPos[0] - currentTouchPos[0] < -visibleSize.width * 0.05)
-		{
-			CCLOG("SWIPED RIGHT");
+		else if (initialTouchPos[0] - currentTouchPos[0] < -visibleSize.width * 0.05){
 			m_player->setCurrentState(RIGHT);
 			isTouchDown = false;
 		}
-		else if (initialTouchPos[1] - currentTouchPos[1] > visibleSize.width * 0.05)
-		{
-			CCLOG("SWIPED DOWN");
+		else if (initialTouchPos[1] - currentTouchPos[1] > visibleSize.width * 0.05){
 			m_player->setCurrentState(DROP);
 			isTouchDown = false;
 		}
-		else if (initialTouchPos[1] - currentTouchPos[1] < -visibleSize.width * 0.05)
-		{
-			CCLOG("SWIPED UP");
+		else if (initialTouchPos[1] - currentTouchPos[1] < -visibleSize.width * 0.05){
 			m_player->setCurrentState(CLIMB);
 			isTouchDown = false;
 		}
 		else if (initialTouchPos[1] < m_player->getPositionY()){
-			CCLOG("Teleport Up");
 			m_player->setCurrentState(TELEPORT);
 			isTouchDown = false;
 		}
-
 	}
-
-	m_player->changeAnimation(this, m_player->getCurrentState());
 
 	/*if touch on right half of screen*/
 	if (initialTouchPos[0] > visibleSize.width / 2 && isTouchDown){
-
 		projectile->spawnProjectile(Vec2(
-			m_player->getCurrentPosition().x + m_player->getContentSize().height / 2,
-			m_player->getCurrentPosition().y + m_player->getContentSize().width), this);
+			m_player->getCurrentPosition().x + m_player->getContentSize().width / 2,
+			m_player->getCurrentPosition().y + m_player->getContentSize().height ), this);
 
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+		CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(0.5);
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("audio/pew.mp3");
+#else
+		CocosDenshion::SimpleAudioEngine::getInstance()->setEffectsVolume(0.5);
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("audio/pew.wav");
+#endif
 		isTouchDown = false;
 	}
 }
 
-
+//Call hud update timer
 void GameScene::updateTimer(float dt){
 	m_hud->updateTimer();
 }
 
+//Update Player
+void GameScene::updatePlayer(float dt){
+	m_player->update();
+}
+
 //On Touch
 bool GameScene::onTouchBegan(Touch *touch, Event * event){
-
 	initialTouchPos[0] = touch->getLocation().x;
 	initialTouchPos[1] = touch->getLocation().y;
 	currentTouchPos[0] = touch->getLocation().x;
 	currentTouchPos[1] = touch->getLocation().y;
 
 	isTouchDown = true;
-
-	return true;
+	return isTouchDown;
 }
-
+//Is touch a swipe
 void GameScene::onTouchMoved(Touch *touch, Event * event){
 	currentTouchPos[0] = touch->getLocation().x;
 	currentTouchPos[1] = touch->getLocation().y;
 }
-
+//has Touch ended
 void GameScene::onTouchEnded(Touch *touch, Event * event){
 	isTouchDown = false;
 }
-
-
+//Is the touch cancled
 void GameScene::onTouchCancelled(Touch *touch, Event *event){
 	onTouchEnded(touch, event);
 }
@@ -190,14 +183,17 @@ bool GameScene::onContactBegin(PhysicsContact &contact){
 
 
 
+//Load Level from plist file
 void GameScene::loadLevel(){
 
-	
+	//Get current level
 	UserDefault* ud = UserDefault::getInstance();
 	m_currentLevel = ud->getIntegerForKey("level");
 
+	//level file
 	char file[200] = { 0 };
 
+	//Get level plist file for  assets folder (Note: Path different on different Platforms)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	sprintf(file, "../../Resources/level%d.plist", m_currentLevel);
 	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename(file);
@@ -208,15 +204,17 @@ void GameScene::loadLevel(){
 	std::string levelsFile = FileUtils::getInstance()->fullPathForFilename(file);
 #endif
 
-
+	//read in full file as a map
 	ValueMap m_levels = FileUtils::getInstance()->getValueMapFromFile(levelsFile);
 
+	//Different Vectors for different level data
 	auto& LadderData = m_levels["ladders"].asValueVector();
 	auto& PlayerData = m_levels["player"].asValueVector();
 	auto& MetaData = m_levels["meta"].asValueVector();
 
 	/*
 		Get player data from file
+		and create palyer
 	*/
 	for (auto i = PlayerData.begin(); i != PlayerData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
@@ -225,6 +223,7 @@ void GameScene::loadLevel(){
 
 	/*
 		Get Ladder data from file
+		and create ladders
 	*/
 	for (auto i = LadderData.begin(); i != LadderData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
@@ -233,6 +232,9 @@ void GameScene::loadLevel(){
 
 	/*
 		Get Level Meta Data
+		contains lane numbers
+		speed of ghouls
+		and spawn rate
 	*/
 	for (auto i = MetaData.begin(); i != MetaData.end(); i++){
 		ValueMap& sdata = i->asValueMap();
@@ -243,6 +245,7 @@ void GameScene::loadLevel(){
 		float speed = sdata["speed"].asFloat();
 		m_spawnRate = sdata["spawnrate"].asFloat();
 		
+		//pass it to the wave factory
 		m_wf->getData(amount, minLane, maxLane, speed);
 	}
 }
@@ -253,29 +256,19 @@ void GameScene::createWaves(float dt) {
 	m_wf->createWave(this);
 }
 
+
+//Create the ladders 
 void GameScene::createLadders(int x, int y){
 	
 	m_ladder = new Ladder();
-
 	int pX;
 
-	switch (x){
-	case 0:
+	if (x == 0)
 		pX = origin.x;
-		break;
-	case 1:
+	
+	if (x == 1)
 		pX = origin.x + visibleSize.width / 8;
-		break;
-	default:
-		break;
-	}
-
+	
 	m_ladder->create(Vec2(pX, m_wf->getLane(y)), this);
-
 }
-
-
-void GameScene::clearLayer(void){}
-void GameScene::resetLevel(void){}
-void GameScene::levelCompleted(void){}
 

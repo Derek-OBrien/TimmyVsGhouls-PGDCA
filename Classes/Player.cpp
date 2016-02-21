@@ -6,19 +6,17 @@ USING_NS_CC;
 Player::Player(){
 
 	m_playerSprite = NULL;
-	//projectile = new Projectile();
 }
 
-//Create Tower on Touch
+//Create Player with physics
 void Player::create(Vec2(pos), Layer* layer){
 
 	m_currState = STILL;
-	m_canFire = true;
-
-	m_playerSprite = Sprite::create("stickman/wl_01.png");
+	
+	initActions(layer);
 	
 
-	playerBody = PhysicsBody::createBox(Size(m_playerSprite->getContentSize().width / 2, m_playerSprite->getContentSize().height), PhysicsMaterial(0, 0.1, 0));
+	playerBody = PhysicsBody::createBox(Size(m_playerSprite->getContentSize().width / 4, m_playerSprite->getContentSize().height), PhysicsMaterial(0, 0.1, 0));
 	playerBody->setDynamic(true);
 	playerBody->setGravityEnable(true);
 	playerBody->setCollisionBitmask(PLAYER_BITMASK);
@@ -29,104 +27,128 @@ void Player::create(Vec2(pos), Layer* layer){
 
 	m_playerSprite->setAnchorPoint(Vec2(0, 0));
 	m_playerSprite->setPosition(pos);
-	layer->addChild(m_playerSprite, 2);
 }
 
+//Update sprite position and Animation 
 void Player::update(){
-
-}
-
-void Player::changeAnimation(Layer* layer, int state){
-
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	Vector<SpriteFrame*> animFrames(5);
-	char str[100] = { 0 };
-	auto animation = new Animation();
-
-	switch (m_currState)
-	{
-	case LEFT:
-		for (int i = 1; i < 5; i++){
-			sprintf(str, "stickman/wl_0%d.png", i);
-			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
-			animFrames.pushBack(frame);
-		}
-		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
-		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
+	int pState = getCurrentState();
+	int pPosition = m_playerSprite->getPositionX();
+	
+	if (pState == LEFT){
+		this->m_playerSprite->stopAllActions();
 		if (m_playerSprite->getPositionX() > origin.x){
-			m_playerSprite->setPositionX(m_playerSprite->getPositionX() -5.0);
-//			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(-30, 0), Vec2::ZERO);
 
+			auto moveBy = MoveTo::create(0.5f, Vec2((pPosition - 100), m_playerSprite->getPositionY()));
+			m_playerSprite->runAction(moveBy);
+			m_playerSprite->runAction(this->leftAction);
 		}
-		break;
-	case RIGHT:
-		for (int i = 1; i < 5; i++){
-			sprintf(str, "stickman/wl_0%d.png", i);
-			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
-			animFrames.pushBack(frame);
-		}
-		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
-		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
+	}
+	else if (pState == RIGHT){
+		this->m_playerSprite->stopAllActions();
 		if (m_playerSprite->getPositionX() < origin.x + visibleSize.width / 4){
-			m_playerSprite->setPositionX(m_playerSprite->getPositionX() + 5.0);
-//			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(30, 0), Vec2::ZERO);
 
+			auto moveBy = MoveTo::create(0.5f, Vec2((pPosition + 100), m_playerSprite->getPositionY()));
+			m_playerSprite->runAction(moveBy);
+			m_playerSprite->runAction(this->rightAction);
 		}
-		break;
-	case CLIMB:
-		for (int i = 1; i < 5; i++){
-			sprintf(str, "stickman/c_0%d.png", i);
-			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
-			animFrames.pushBack(frame);
-		}
-		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
-		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
-
+	}
+	else if (pState == CLIMB){
+		this->m_playerSprite->stopAllActions();
 		if (m_playerSprite->getPositionY() < visibleSize.height + origin.y - m_playerSprite->getContentSize().height){
-			//m_playerSprite->setPositionY(m_playerSprite->getPositionY() + 5.0);
 
-			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, 50), Vec2::ZERO);
+			this->m_playerSprite->runAction(this->climbAction);
+			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, 100), Vec2::ZERO);
 		}
+	}
+	else if (pState == DROP){
+		this->m_playerSprite->stopAllActions();
+		if (m_playerSprite->getPositionY() < visibleSize.height + origin.y - m_playerSprite->getContentSize().height){
 
-		break;
-	case DROP:
-		for (int i = 1; i < 5; i++){
-			sprintf(str, "stickman/c_0%d.png", i);
-			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
-			animFrames.pushBack(frame);
+			this->m_playerSprite->runAction(this->dropAction);
+			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, -100), Vec2::ZERO);
 		}
-		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
-		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
-		
-		if (m_playerSprite->getPositionY() > origin.y - visibleSize.height / 2){
-		//	m_playerSprite->setPositionY(m_playerSprite->getPositionY() - 5.0);
-			m_playerSprite->getPhysicsBody()->applyImpulse(Vec2(0, -50), Vec2::ZERO);
-
-		}
-		break;
-	case TELEPORT:
-		for (int i = 1; i < 5; i++){
-			sprintf(str, "stickman/c_0%d.png", i);
-			auto frame = SpriteFrame::create(str, Rect(0, 0, 150, 150));
-			animFrames.pushBack(frame);
-		}
-		animation = Animation::createWithSpriteFrames(animFrames, 0.4f);
-		m_playerSprite->runAction(RepeatForever::create(Animate::create(animation)));
-
-		if (m_playerSprite->getPositionY() > origin.y - visibleSize.height / 2){
-			m_playerSprite->setPositionY(m_playerSprite->getPositionY() + visibleSize.height / 8);
-		}
-		break;
-	default:
-		break;
+	}
+	else if (pState == STILL){
+		this->m_playerSprite->stopAllActions();
 	}
 }
 
+//Set up players animations
+void Player::initActions(Layer* layer){
+
+	playerBatch = SpriteBatchNode::create("stickman/player.png");
+	cache = SpriteFrameCache::getInstance();
+	cache->addSpriteFramesWithFile("stickman/player.plist");
+
+	//set initial sprite from SpriteBatch
+	m_playerSprite = Sprite::createWithSpriteFrameName("wl_01.png");
+	playerBatch->addChild(m_playerSprite);
+	layer->addChild(playerBatch, 3);
+	
+	//Create frame vector
+	Vector<SpriteFrame*> animFrames(5);
+	char str[100] = { 0 };
+	
+	//Left Action
+	for (int i = 1; i <= 5; i++){
+		sprintf(str, "wr_0%d.png", i);
+		SpriteFrame* frame = cache->getSpriteFrameByName(str);
+		animFrames.pushBack(frame);
+	}
+	auto animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+	this->leftAction = RepeatForever::create(Animate::create(animation));
+	this->leftAction->retain();
+		
+
+	//Right Action
+	animFrames.clear();
+	for (int i = 1; i <= 5; i++){
+		sprintf(str, "wl_0%d.png", i);
+		SpriteFrame* frame = cache->getSpriteFrameByName(str);
+		animFrames.pushBack(frame);
+	}
+	animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+	this->rightAction = RepeatForever::create(Animate::create(animation));
+	this->rightAction->retain();
+		
+	
+	//Climb animation
+	animFrames.clear();
+	for (int i = 1; i <= 5; i++){
+		sprintf(str, "c_0%d.png", i);
+		SpriteFrame* frame = cache->getSpriteFrameByName(str);
+		animFrames.pushBack(frame);
+	}
+	animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+	this->climbAction = RepeatForever::create(Animate::create(animation));
+	this->climbAction->retain();
 
 
+	//Drop animation
+	animFrames.clear();
+	for (int i = 1; i <= 5; i++){
+		sprintf(str, "c_0%d.png", i);
+		SpriteFrame* frame = cache->getSpriteFrameByName(str);
+		animFrames.pushBack(frame);
+	}
+	animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+	this->dropAction = RepeatForever::create(Animate::create(animation));
+	this->dropAction->retain();
+	
+}
 
+//Release Animations Actions
+void Player::releaseActions(){
+	this->leftAction->release();
+	this->rightAction->release();
+	this->climbAction->release();
+	this->dropAction->release();
+}
+
+//Get the players current position
 Vec2 Player::getCurrentPosition(){ 
 	return m_playerSprite->getPosition(); 
 }
