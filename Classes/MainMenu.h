@@ -2,7 +2,7 @@
 #define __MAINMENU_SCENE_H__
 
 #include "cocos2d.h"
-
+#include "HttpConnection.h"
 class MainMenu : public cocos2d::Layer
 {
 public:
@@ -18,6 +18,7 @@ public:
 	void GoToSettingsScene(Ref* pSender);	//Settings Button
 	void GoToStoreScene(Ref* pSender);		//Store Button
 
+	HttpConnection* connection;
 	// implement the "static create()" method manually
 	CREATE_FUNC(MainMenu);
 };

@@ -147,6 +147,7 @@ bool GameOverScene::init()
 			origin.y + visibleSize.height - label2->getContentSize().height * 2));
 		this->addChild(label2, 1);
 
+
 		/*Unlock Next level*/
 		char level[10] = { 0 };
 		sprintf(level, "level%d", (ud->getIntegerForKey("level") + 1));

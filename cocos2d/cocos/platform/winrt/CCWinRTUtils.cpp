@@ -365,12 +365,13 @@ bool createMappedCacheFile(const std::string& srcFilePath, std::string& cacheFil
     cacheFilePath = folderPath + computeHashForFile(srcFilePath) + ext;
     std::string prevFile = UserDefault::getInstance()->getStringForKey(srcFilePath.c_str());
 
-    if (prevFile == cacheFilePath) {
+   /* if (prevFile == cacheFilePath) {
         ret = FileUtils::getInstance()->isFileExist(cacheFilePath);
     }
     else {
         FileUtils::getInstance()->removeFile(prevFile);
-    }
+    }*/
+	FileUtils::getInstance()->removeFile(prevFile);
 
     UserDefault::getInstance()->setStringForKey(srcFilePath.c_str(), cacheFilePath);
     return ret;

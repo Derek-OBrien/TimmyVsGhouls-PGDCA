@@ -3,6 +3,8 @@
 #include "GameScene.h"
 
 #include "LevelSelScene.h"
+
+#include "HttpConnection.h"
 USING_NS_CC;
 
 Scene* MainMenu::createScene(){
@@ -74,9 +76,9 @@ bool MainMenu::init(){
 	bg->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	this->addChild(bg, 0);
 
-	
-	
-	
+	connection = new HttpConnection();
+	connection->init();
+
 	return true;
 }
 

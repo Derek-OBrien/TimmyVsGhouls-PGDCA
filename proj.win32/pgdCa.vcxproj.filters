@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Http">
+      <UniqueIdentifier>{56896d83-0c08-4ef7-8af6-6d7f186c7f69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,10 +54,17 @@
     <ClCompile Include="..\Classes\CollisionCheck.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Hudlayer.cpp" />
-    <ClCompile Include="..\Classes\PauseScene.cpp" />
     <ClCompile Include="..\Classes\Projectile.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Hudlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\PauseScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HttpConnection.cpp">
+      <Filter>src\Http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,8 +113,15 @@
     <ClInclude Include="..\Classes\CollisionCheck.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\HudLayer.h" />
-    <ClInclude Include="..\Classes\PauseScene.h" />
+    <ClInclude Include="..\Classes\PauseScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HudLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HttpConnection.h">
+      <Filter>src\Http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
